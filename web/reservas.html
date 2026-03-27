@@ -226,36 +226,35 @@
 <nav class="navbar solid" id="navbar">
   <div class="navbar__inner">
     <a href="index.html" class="navbar__logo">
-      <span class="navbar__logo-icon">🌴</span>
       <span>
         <span class="navbar__logo-text">La Gabriela</span>
         <span class="navbar__logo-sub">San Bernardo del Viento</span>
       </span>
     </a>
     <div class="navbar__links">
-      <a href="index.html"        class="navbar__link">Inicio</a>
-      <a href="habitaciones.html" class="navbar__link">Habitaciones</a>
-      <a href="galeria.html"      class="navbar__link">Galería</a>
-      <a href="lugares.html"      class="navbar__link">Lugares</a>
-      <a href="como-llegar.html"  class="navbar__link">Cómo Llegar</a>
+      <a href="index.html"        class="navbar__link" data-es="Inicio" data-en="Home">Inicio</a>
+      <a href="habitaciones.html" class="navbar__link" data-es="Habitaciones" data-en="Rooms">Habitaciones</a>
+      <a href="galeria.html"      class="navbar__link" data-es="Galería" data-en="Gallery">Galería</a>
+      <a href="lugares.html"      class="navbar__link" data-es="Lugares" data-en="Places">Lugares</a>
+      <a href="como-llegar.html"  class="navbar__link" data-es="Cómo Llegar" data-en="How to Arrive">Cómo Llegar</a>
     </div>
     <div class="navbar__actions">
       <div class="lang-toggle">
         <button class="lang-btn" data-lang="es">ES</button>
         <button class="lang-btn" data-lang="en">EN</button>
       </div>
-      <a href="reservas.html" class="navbar__cta active">Reservar</a>
+      <a href="reservas.html" class="navbar__cta active" data-es="Reservar" data-en="Book Now">Reservar</a>
     </div>
     <button class="navbar__hamburger" aria-label="Menú"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="navbar__mobile" id="mobileMenu">
-  <a href="index.html"        class="navbar__link">🏠 Inicio</a>
-  <a href="habitaciones.html" class="navbar__link">🛏️ Habitaciones</a>
-  <a href="galeria.html"      class="navbar__link">📷 Galería</a>
-  <a href="lugares.html"      class="navbar__link">🗺️ Lugares</a>
-  <a href="como-llegar.html"  class="navbar__link">📍 Cómo Llegar</a>
-  <a href="reservas.html"     class="navbar__cta">Reservar Ahora</a>
+  <a href="index.html"        class="navbar__link" data-es="Inicio" data-en="Home">Inicio</a>
+  <a href="habitaciones.html" class="navbar__link" data-es="Habitaciones" data-en="Rooms">Habitaciones</a>
+  <a href="galeria.html"      class="navbar__link" data-es="Galería" data-en="Gallery">Galería</a>
+  <a href="lugares.html"      class="navbar__link" data-es="Lugares" data-en="Places">Lugares</a>
+  <a href="como-llegar.html"  class="navbar__link" data-es="Cómo Llegar" data-en="How to Arrive">Cómo Llegar</a>
+  <a href="reservas.html"     class="navbar__cta" data-es="Reservar Ahora" data-en="Book Now">Reservar Ahora</a>
   <div class="lang-toggle" style="margin-top:8px;align-self:flex-start;">
     <button class="lang-btn" data-lang="es">ES</button>
     <button class="lang-btn" data-lang="en">EN</button>
@@ -272,7 +271,7 @@
         Elige tu plan, calcula el precio y envía tu solicitud. Te confirmamos en minutos.
       </p>
       <div class="breadcrumb">
-        <a href="index.html">Inicio</a>
+        <a href="index.html" data-es="Inicio" data-en="Home">Inicio</a>
         <span>›</span>
         <span data-es="Reservar" data-en="Book">Reservar</span>
       </div>
@@ -285,7 +284,7 @@
 <!-- ============================================================ -->
 <section id="disponibilidad" style="background: white; padding: 56px 0 48px;">
   <div class="container">
-    <div class="section-header fade-in" style="margin-bottom:32px;">
+    <div class="section-header blur-in" style="margin-bottom:32px;">
       <span class="eyebrow" data-es="Consulta antes de reservar" data-en="Check before booking">Consulta antes de reservar</span>
       <h2 data-es="Disponibilidad" data-en="Availability">Disponibilidad</h2>
       <p data-es="Verifica las fechas disponibles según el plan que deseas. Las fechas marcadas ya tienen reserva." data-en="Check available dates for your desired plan. Marked dates already have a booking.">
@@ -298,37 +297,41 @@
       <!-- Leyenda -->
       <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px; justify-content:center;">
         <div style="display:flex; align-items:center; gap:6px; font-size:0.82rem; color:var(--gray);">
-          <span style="width:14px;height:14px;border-radius:3px;background:#E8F5E9;border:1px solid #81C784;display:inline-block;"></span> Disponible
+          <span style="width:14px;height:14px;border-radius:3px;background:#E8F5E9;border:1px solid #81C784;display:inline-block;"></span>
+          <span data-es="Disponible" data-en="Available">Disponible</span>
         </div>
         <div style="display:flex; align-items:center; gap:6px; font-size:0.82rem; color:var(--gray);">
-          <span style="width:14px;height:14px;border-radius:3px;background:#FFF3E0;border:2px solid #FFB703;display:inline-block;"></span> Piso 1 reservado
+          <span style="width:14px;height:14px;border-radius:3px;background:#FFF3E0;border:2px solid #FFB703;display:inline-block;"></span>
+          <span data-es="Piso 1 reservado" data-en="Floor 1 booked">Piso 1 reservado</span>
         </div>
         <div style="display:flex; align-items:center; gap:6px; font-size:0.82rem; color:var(--gray);">
-          <span style="width:14px;height:14px;border-radius:3px;background:#E3F2FD;border:2px solid #1D6FA6;display:inline-block;"></span> 2° Piso reservado
+          <span style="width:14px;height:14px;border-radius:3px;background:#E3F2FD;border:2px solid #1D6FA6;display:inline-block;"></span>
+          <span data-es="2° Piso reservado" data-en="2nd Floor booked">2° Piso reservado</span>
         </div>
         <div style="display:flex; align-items:center; gap:6px; font-size:0.82rem; color:var(--gray);">
-          <span style="width:14px;height:14px;border-radius:3px;background:#FCE4EC;border:2px solid #E63946;display:inline-block;"></span> Cabaña completa
+          <span style="width:14px;height:14px;border-radius:3px;background:#FCE4EC;border:2px solid #E63946;display:inline-block;"></span>
+          <span data-es="Cabaña completa" data-en="Full cabin">Cabaña completa</span>
         </div>
       </div>
 
       <!-- Navegación del mes -->
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-        <button id="calPrev" onclick="calPrevMonth()" style="padding:8px 16px; border:2px solid var(--gray-border); border-radius:var(--radius-sm); background:white; cursor:pointer; font-family:var(--font-body); font-size:0.875rem; font-weight:600; color:var(--dark); transition:all 0.2s;">← Anterior</button>
+        <button id="calPrev" onclick="calPrevMonth()" style="padding:8px 16px; border:2px solid var(--gray-border); border-radius:var(--radius-sm); background:white; cursor:pointer; font-family:var(--font-body); font-size:0.875rem; font-weight:600; color:var(--dark); transition:all 0.2s;" data-es="← Anterior" data-en="← Previous">← Anterior</button>
         <h3 id="calTitle" style="font-family:var(--font-heading); font-size:1.2rem; font-weight:700; color:var(--dark); text-align:center;"></h3>
-        <button id="calNext" onclick="calNextMonth()" style="padding:8px 16px; border:2px solid var(--gray-border); border-radius:var(--radius-sm); background:white; cursor:pointer; font-family:var(--font-body); font-size:0.875rem; font-weight:600; color:var(--dark); transition:all 0.2s;">Siguiente →</button>
+        <button id="calNext" onclick="calNextMonth()" style="padding:8px 16px; border:2px solid var(--gray-border); border-radius:var(--radius-sm); background:white; cursor:pointer; font-family:var(--font-body); font-size:0.875rem; font-weight:600; color:var(--dark); transition:all 0.2s;" data-es="Siguiente →" data-en="Next →">Siguiente →</button>
       </div>
 
       <!-- Grid del calendario -->
       <div id="calGrid" style="border:1px solid var(--gray-border); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-xs);">
         <!-- Días de la semana -->
         <div style="display:grid; grid-template-columns:repeat(7,1fr); background:var(--dark);">
-          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;">Dom</div>
-          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;">Lun</div>
-          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;">Mar</div>
-          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;">Mié</div>
-          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;">Jue</div>
-          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;">Vie</div>
-          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;">Sáb</div>
+          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;" data-es="Dom" data-en="Sun">Dom</div>
+          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;" data-es="Lun" data-en="Mon">Lun</div>
+          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;" data-es="Mar" data-en="Tue">Mar</div>
+          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;" data-es="Mié" data-en="Wed">Mié</div>
+          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;" data-es="Jue" data-en="Thu">Jue</div>
+          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;" data-es="Vie" data-en="Fri">Vie</div>
+          <div style="text-align:center; padding:10px 4px; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.08em;" data-es="Sáb" data-en="Sat">Sáb</div>
         </div>
         <!-- Días del mes -->
         <div id="calDays" style="display:grid; grid-template-columns:repeat(7,1fr); background:white;"></div>
@@ -358,7 +361,7 @@
 
           <div class="form-card__body">
             <!-- Sección 1: Tus datos -->
-            <div class="form-section-title">👤 <span data-es="Tus datos" data-en="Your details">Tus datos</span></div>
+            <div class="form-section-title"><span data-es="Tus datos" data-en="Your details">Tus datos</span></div>
 
             <div class="form-row">
               <div class="form-group">
@@ -374,9 +377,25 @@
                 <label class="form-label" data-es="Teléfono / WhatsApp" data-en="Phone / WhatsApp">
                   Teléfono / WhatsApp <span class="required">*</span>
                 </label>
-                <input type="tel" name="telefono" class="form-control" required
-                  data-es-placeholder="+57 300 000 0000" data-en-placeholder="+57 300 000 0000"
-                  placeholder="+57 300 000 0000">
+                <div class="phone-field">
+                  <select class="phone-prefix" name="telefono_prefijo" aria-label="Prefijo de país">
+                    <option value="+57">🇨🇴 +57</option>
+                    <option value="+1">🇺🇸 +1</option>
+                    <option value="+52">🇲🇽 +52</option>
+                    <option value="+58">🇻🇪 +58</option>
+                    <option value="+593">🇪🇨 +593</option>
+                    <option value="+507">🇵🇦 +507</option>
+                    <option value="+34">🇪🇸 +34</option>
+                    <option value="+44">🇬🇧 +44</option>
+                    <option value="+55">🇧🇷 +55</option>
+                    <option value="+54">🇦🇷 +54</option>
+                    <option value="+49">🇩🇪 +49</option>
+                    <option value="+33">🇫🇷 +33</option>
+                  </select>
+                  <input type="tel" name="telefono" class="form-control phone-number" required
+                    data-es-placeholder="300 000 0000" data-en-placeholder="300 000 0000"
+                    placeholder="300 000 0000">
+                </div>
                 <span class="form-error" data-es="Por favor ingresa tu teléfono" data-en="Please enter your phone">Por favor ingresa tu teléfono</span>
               </div>
             </div>
@@ -394,7 +413,7 @@
             <hr class="form-divider">
 
             <!-- Sección 2: Fechas -->
-            <div class="form-section-title">📅 <span data-es="Fechas de estadía" data-en="Stay dates">Fechas de estadía</span></div>
+            <div class="form-section-title"><span data-es="Fechas de estadía" data-en="Stay dates">Fechas de estadía</span></div>
 
             <div class="form-row">
               <div class="form-group">
@@ -429,64 +448,65 @@
             <hr class="form-divider">
 
             <!-- Sección 3: Plan de alquiler -->
-            <div class="form-section-title">🏠 <span data-es="Elige tu plan" data-en="Choose your plan">Elige tu plan</span></div>
+            <div class="form-section-title"><span data-es="Elige tu plan" data-en="Choose your plan">Elige tu plan</span></div>
 
             <div class="plan-options" id="planOptions">
 
               <!-- Piso 1 -->
               <label class="plan-option">
                 <input type="radio" name="plan" value="piso1" data-price="1000000" data-max="12" required>
-                <div class="plan-card">
+                <div class="plan-card shimmer">
                   <img src="img/DSC_0002.jpg" alt="Primer Piso" style="width:100%;height:110px;object-fit:cover;border-radius:8px 8px 0 0;margin-bottom:8px;display:block;">
                   <div class="plan-card__name" data-es="Primer Piso" data-en="First Floor">Primer Piso</div>
-                  <div class="plan-card__desc">3 hab. · hasta 12 pers. · 2 baños</div>
-                  <div class="plan-card__price">$1.000.000 / noche</div>
+                  <div class="plan-card__desc" data-es="3 hab. · hasta 12 pers. · 2 baños" data-en="3 rooms · up to 12 guests · 2 bathrooms">3 hab. · hasta 12 pers. · 2 baños</div>
+                  <div class="plan-card__price" data-es="$1.000.000 / noche" data-en="$1,000,000 / night">$1.000.000 / noche</div>
                 </div>
               </label>
 
               <!-- Piso 2 + 3 -->
               <label class="plan-option">
                 <input type="radio" name="plan" value="piso2" data-price="1500000" data-max="20">
-                <div class="plan-card">
+                <div class="plan-card shimmer">
                   <img src="img/Asoleadero.jpg" alt="2° Piso + Terraza" style="width:100%;height:110px;object-fit:cover;border-radius:8px 8px 0 0;margin-bottom:8px;display:block;">
                   <div class="plan-card__name" data-es="2° Piso + Terraza" data-en="2nd Floor + Rooftop">2° Piso + Terraza</div>
-                  <div class="plan-card__desc">4 hab. · hasta 20 pers. · incl. 3er piso</div>
-                  <div class="plan-card__price">$1.500.000 / noche</div>
+                  <div class="plan-card__desc" data-es="4 hab. · hasta 20 pers. · incl. 3er piso" data-en="4 rooms · up to 20 guests · incl. rooftop">4 hab. · hasta 20 pers. · incl. 3er piso</div>
+                  <div class="plan-card__price" data-es="$1.500.000 / noche" data-en="$1,500,000 / night">$1.500.000 / noche</div>
                 </div>
               </label>
 
               <!-- Cabaña completa -->
               <label class="plan-option">
                 <input type="radio" name="plan" value="completa" data-price="2000000" data-max="40">
-                <div class="plan-card">
+                <div class="plan-card shimmer">
                   <img src="img/Hero.jpg" alt="Cabaña Completa" style="width:100%;height:110px;object-fit:cover;border-radius:8px 8px 0 0;margin-bottom:8px;display:block;">
                   <div class="plan-card__name" data-es="Cabaña Completa" data-en="Full Cabin">Cabaña Completa</div>
-                  <div class="plan-card__desc">7 hab. + terraza · hasta 40+ pers.</div>
-                  <div class="plan-card__price">$2.000.000 / noche</div>
+                  <div class="plan-card__desc" data-es="7 hab. + terraza · hasta 40+ pers." data-en="7 rooms + rooftop · up to 40+ guests">7 hab. + terraza · hasta 40+ pers.</div>
+                  <div class="plan-card__price" data-es="$2.000.000 / noche" data-en="$2,000,000 / night">$2.000.000 / noche</div>
                 </div>
               </label>
 
             </div>
-            <span class="form-error" id="planError" style="display:none; margin-top:8px; color:var(--primary); font-size:0.82rem;">
+            <span class="form-error" id="planError" style="display:none; margin-top:8px; color:var(--primary); font-size:0.82rem;"
+              data-es="Por favor selecciona un plan." data-en="Please select a plan.">
               Por favor selecciona un plan.
             </span>
 
             <!-- Calculadora de precio -->
             <div class="price-calculator" id="priceCalculator">
               <div class="price-calc__row">
-                <span class="price-calc__label">Plan seleccionado</span>
+                <span class="price-calc__label" data-es="Plan seleccionado" data-en="Selected plan">Plan seleccionado</span>
                 <span class="price-calc__value" id="calcPlan">—</span>
               </div>
               <div class="price-calc__row">
-                <span class="price-calc__label">Precio por noche</span>
+                <span class="price-calc__label" data-es="Precio por noche" data-en="Price per night">Precio por noche</span>
                 <span class="price-calc__value" id="calcPriceNight">—</span>
               </div>
               <div class="price-calc__row">
-                <span class="price-calc__label">Noches</span>
+                <span class="price-calc__label" data-es="Noches" data-en="Nights">Noches</span>
                 <span class="price-calc__value" id="calcNights">—</span>
               </div>
               <div class="price-calc__total">
-                <span class="price-calc__total-label">Total estimado</span>
+                <span class="price-calc__total-label" data-es="Total estimado" data-en="Estimated total">Total estimado</span>
                 <span class="price-calc__total-value" id="calcTotal">—</span>
               </div>
             </div>
@@ -494,26 +514,26 @@
             <hr class="form-divider">
 
             <!-- Sección 4: Cocinero -->
-            <div class="form-section-title">👨‍🍳 <span data-es="Servicio de cocinero" data-en="Chef service">Servicio de cocinero</span></div>
+            <div class="form-section-title"><span data-es="Servicio de cocinero" data-en="Chef service">Servicio de cocinero</span></div>
 
             <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:8px;">
               <label style="flex:1; min-width:140px; cursor:pointer;">
                 <input type="radio" name="cocinero" value="no" checked style="display:none;" class="chef-radio">
                 <div class="plan-card chef-card" style="padding:14px 18px; flex-direction:row; align-items:center; gap:10px; text-align:left;">
-                  <span style="font-size:1.4rem;">🚫</span>
+                  <span style="font-size:1.4rem;opacity:0.4;">✕</span>
                   <div>
-                    <div style="font-weight:700; font-size:0.9rem; color:var(--dark);">Sin cocinero</div>
-                    <div style="font-size:0.75rem; color:var(--gray);">Cocina disponible para uso propio</div>
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--dark);" data-es="Sin cocinero" data-en="Without chef">Sin cocinero</div>
+                    <div style="font-size:0.75rem; color:var(--gray);" data-es="Cocina disponible para uso propio" data-en="Kitchen available for self-use">Cocina disponible para uso propio</div>
                   </div>
                 </div>
               </label>
               <label style="flex:1; min-width:140px; cursor:pointer;">
                 <input type="radio" name="cocinero" value="si" style="display:none;" class="chef-radio">
                 <div class="plan-card chef-card" style="padding:14px 18px; flex-direction:row; align-items:center; gap:10px; text-align:left;">
-                  <span style="font-size:1.4rem;">👨‍🍳</span>
+                  <span style="font-size:1.4rem;">✓</span>
                   <div>
-                    <div style="font-weight:700; font-size:0.9rem; color:var(--dark);">Con cocinero</div>
-                    <div style="font-size:0.75rem; color:var(--gray);">+$200.000 por día</div>
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--dark);" data-es="Con cocinero" data-en="With chef">Con cocinero</div>
+                    <div style="font-size:0.75rem; color:var(--gray);" data-es="+$100.000 / persona / día · 3 comidas incluidas" data-en="+$100,000 / person / day · 3 meals included">+$100.000 / persona / día · 3 comidas incluidas</div>
                   </div>
                 </div>
               </label>
@@ -522,7 +542,7 @@
             <hr class="form-divider">
 
             <!-- Sección 5: Mensaje -->
-            <div class="form-section-title">💬 <span data-es="Mensaje adicional" data-en="Additional message">Mensaje adicional</span></div>
+            <div class="form-section-title"><span data-es="Mensaje adicional" data-en="Additional message">Mensaje adicional</span></div>
 
             <div class="form-group">
               <label class="form-label" data-es="¿Algo más que debamos saber?" data-en="Anything else we should know?">¿Algo más que debamos saber?</label>
@@ -533,9 +553,9 @@
             </div>
 
             <div class="alert alert-info">
-              <span>💡</span>
-              <span data-es="También puedes contratar servicio de cocina a través de nosotros. Menciónalo en tu mensaje." data-en="You can also hire cooking staff through us. Mention it in your message.">
-                También puedes contratar servicio de cocina a través de nosotros. Menciónalo en tu mensaje.
+              <span>ℹ</span>
+              <span data-es="El servicio de cocinero incluye desayuno, almuerzo y cena para todos los huéspedes. El costo se calcula según el número de personas y los días de estadía." data-en="The chef service includes breakfast, lunch, and dinner for all guests. Cost is calculated based on the number of guests and days of stay.">
+                El servicio de cocinero incluye desayuno, almuerzo y cena para todos los huéspedes. El costo se calcula según el número de personas y los días de estadía.
               </span>
             </div>
           </div>
@@ -554,7 +574,7 @@
         <!-- MENSAJE DE VERIFICACIÓN INLINE -->
         <div class="booking-success" id="bookingSuccess">
           <div class="booking-success__header">
-            <div class="booking-success__check">✅</div>
+            <div class="booking-success__check"></div>
             <div class="booking-success__title" data-es="¡Solicitud enviada!" data-en="Request submitted!">¡Solicitud enviada!</div>
             <div class="booking-success__sub" data-es="Hemos recibido tu solicitud y nos pondremos en contacto contigo pronto." data-en="We've received your request and will contact you shortly.">
               Hemos recibido tu solicitud y nos pondremos en contacto contigo pronto.
@@ -598,21 +618,21 @@
             </div>
             <div class="cabin-meta">
               <div class="cabin-meta__item">
-                <span>📍</span>
+                <span>◈</span>
                 <div>
                   <strong data-es="Cabaña La Gabriela" data-en="Cabaña La Gabriela">Cabaña La Gabriela</strong>
                   <span data-es="Playa Venado, San Bernardo del Viento" data-en="Playa Venado, San Bernardo del Viento">Playa Venado, San Bernardo del Viento</span>
                 </div>
               </div>
               <div class="cabin-meta__item">
-                <span>🛏️</span>
+                <span class="fi">✓</span>
                 <div>
                   <strong data-es="7 habitaciones · 3 pisos" data-en="7 rooms · 3 floors">7 habitaciones · 3 pisos</strong>
                   <span data-es="Capacidad: hasta 40+ personas" data-en="Capacity: up to 40+ people">Capacidad: hasta 40+ personas</span>
                 </div>
               </div>
               <div class="cabin-meta__item">
-                <span>🌊</span>
+                <span class="fi">✓</span>
                 <div>
                   <strong data-es="Directamente en la playa" data-en="Directly on the beach">Directamente en la playa</strong>
                   <span data-es="Frente al mar Caribe colombiano" data-en="Facing the Colombian Caribbean Sea">Frente al mar Caribe colombiano</span>
@@ -629,14 +649,14 @@
           </div>
           <div class="sidebar-card__body">
             <div class="amenity-mini">
-              <div class="amenity-mini__item"><span>🌊</span> <span data-es="Frente al mar" data-en="Beachfront">Frente al mar</span></div>
-              <div class="amenity-mini__item"><span>❄️</span> <span data-es="Aire acondicionado" data-en="A/C">Aire acondicionado</span></div>
+              <div class="amenity-mini__item"><span class="fi">✓</span> <span data-es="Frente al mar" data-en="Beachfront">Frente al mar</span></div>
+              <div class="amenity-mini__item"><span class="fi">✓</span> <span data-es="Aire acondicionado" data-en="A/C">Aire acondicionado</span></div>
               <div class="amenity-mini__item"><span>🍳</span> <span data-es="Cocina equipada" data-en="Kitchen">Cocina equipada</span></div>
-              <div class="amenity-mini__item"><span>🚗</span> <span data-es="Parqueadero" data-en="Parking">Parqueadero</span></div>
-              <div class="amenity-mini__item"><span>☀️</span> <span data-es="Asoleadero" data-en="Sun deck">Asoleadero</span></div>
-              <div class="amenity-mini__item"><span>📺</span> <span data-es="Televisión" data-en="TV">Televisión</span></div>
-              <div class="amenity-mini__item"><span>👨‍🍳</span> <span data-es="Chef disponible" data-en="Chef available">Chef disponible</span></div>
-              <div class="amenity-mini__item"><span>🏖️</span> <span data-es="Acceso directo playa" data-en="Beach access">Acceso directo playa</span></div>
+              <div class="amenity-mini__item"><span>✓</span> <span data-es="Parqueadero" data-en="Parking">Parqueadero</span></div>
+              <div class="amenity-mini__item"><span>✓</span> <span data-es="Asoleadero" data-en="Sun deck">Asoleadero</span></div>
+              <div class="amenity-mini__item"><span class="fi">✓</span> <span data-es="Televisión" data-en="TV">Televisión</span></div>
+              <div class="amenity-mini__item"><span>✓</span> <span data-es="Chef disponible" data-en="Chef available">Chef disponible</span></div>
+              <div class="amenity-mini__item"><span>✓</span> <span data-es="Acceso directo playa" data-en="Beach access">Acceso directo playa</span></div>
             </div>
           </div>
         </div>
@@ -727,8 +747,8 @@
   <div class="container">
     <div class="footer__grid">
       <div class="footer__brand">
-        <span class="logo-text">🌴 La Gabriela</span>
-        <p>Tu cabaña tropical frente al Caribe en San Bernardo del Viento.</p>
+        <span class="logo-text">La Gabriela</span>
+        <p data-es="Tu cabaña tropical frente al Caribe en San Bernardo del Viento." data-en="Your tropical cabin facing the Caribbean in San Bernardo del Viento.">Tu cabaña tropical frente al Caribe en San Bernardo del Viento.</p>
         <div class="footer__socials">
           <a href="https://wa.me/573137549732" target="_blank" rel="noopener" class="footer__social-link sl-whatsapp">
             <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -749,23 +769,23 @@
         </div>
       </div>
       <div class="footer__col">
-        <h4>Navegación</h4>
+        <h4 data-es="Navegación" data-en="Navigation">Navegación</h4>
         <ul>
-          <li><a href="index.html">Inicio</a></li>
-          <li><a href="habitaciones.html">Habitaciones</a></li>
-          <li><a href="galeria.html">Galería</a></li>
-          <li><a href="lugares.html">Lugares</a></li>
-          <li><a href="como-llegar.html">Cómo Llegar</a></li>
+          <li><a href="index.html" data-es="Inicio" data-en="Home">Inicio</a></li>
+          <li><a href="habitaciones.html" data-es="Habitaciones" data-en="Rooms">Habitaciones</a></li>
+          <li><a href="galeria.html" data-es="Galería" data-en="Gallery">Galería</a></li>
+          <li><a href="lugares.html" data-es="Lugares" data-en="Places">Lugares</a></li>
+          <li><a href="como-llegar.html" data-es="Cómo Llegar" data-en="How to Arrive">Cómo Llegar</a></li>
         </ul>
       </div>
       <div class="footer__col">
-        <h4>Contacto</h4>
-        <div class="footer__contact-item"><span>📱</span><a href="https://wa.me/573137549732">+57 313 754 9732</a></div>
-        <div class="footer__contact-item"><span>📷</span><a href="https://instagram.com/lagabriela06">@lagabriela06</a></div>
+        <h4 data-es="Contacto" data-en="Contact">Contacto</h4>
+        <div class="footer__contact-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><a href="https://wa.me/573137549732">+57 313 754 9732</a></div>
+        <div class="footer__contact-item"><span>◈</span><a href="https://instagram.com/lagabriela06">@lagabriela06</a></div>
       </div>
       <div class="footer__col">
-        <h4>Ubicación</h4>
-        <div class="footer__contact-item"><span>📍</span><span>Playa Venado, San Bernardo del Viento, Córdoba</span></div>
+        <h4 data-es="Ubicación" data-en="Location">Ubicación</h4>
+        <div class="footer__contact-item"><span>◈</span><span>Playa Venado, San Bernardo del Viento, Córdoba</span></div>
       </div>
     </div>
     <div class="footer__bottom"><p>© 2025 Cabaña La Gabriela</p></div>
@@ -774,12 +794,12 @@
 
 <!-- WHATSAPP -->
 <div class="whatsapp-float">
-  <div class="whatsapp-float__bubble">¡Escríbenos!</div>
+  <div class="whatsapp-float__bubble" data-es="¡Escríbenos!" data-en="Chat with us!">¡Escríbenos!</div>
   <a href="https://wa.me/573137549732?text=Hola%2C%20me%20interesa%20la%20Caba%C3%B1a%20La%20Gabriela%20%F0%9F%8C%B4" target="_blank" rel="noopener" class="whatsapp-float__btn" aria-label="WhatsApp">
     <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
   </a>
 </div>
-<button class="scroll-top" aria-label="Volver arriba">↑</button>
+<button class="scroll-top" aria-label="Volver arriba" title="Volver arriba">↑</button>
 <script src="js/main.js"></script>
 <script>
 /* ============================================================
@@ -833,8 +853,12 @@ function getBookedDates() {
 }
 
 function renderCalendar() {
-  const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                      'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const monthNamesES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                        'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const monthNamesEN = ['January','February','March','April','May','June',
+                        'July','August','September','October','November','December'];
+  const lang = (typeof CONFIG !== 'undefined' && CONFIG.lang) ? CONFIG.lang : 'es';
+  const monthNames = lang === 'en' ? monthNamesEN : monthNamesES;
   document.getElementById('calTitle').textContent = monthNames[calMonth] + ' ' + calYear;
 
   const booked  = getBookedDates();

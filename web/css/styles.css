@@ -1198,3 +1198,680 @@ tbody td {
   .whatsapp-float__btn { width: 52px; height: 52px; }
   .scroll-top { display: none; }
 }
+
+/* ================================================================
+   PREMIUM ANIMATIONS — React Bits inspired
+   ================================================================ */
+
+/* ----- Feature icon ----- */
+.fi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.6rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ----- Shimmer card effect (hover) ----- */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 60%;
+  height: 300%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.18) 50%,
+    transparent 60%
+  );
+  transform: rotate(15deg);
+  transition: none;
+  pointer-events: none;
+}
+.shimmer:hover::after {
+  animation: shimmerSlide 0.65s ease forwards;
+}
+@keyframes shimmerSlide {
+  from { left: -100%; }
+  to   { left: 200%; }
+}
+
+/* ----- Glowing border on hover ----- */
+.glow-hover {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.glow-hover:hover {
+  box-shadow: 0 0 0 2px rgba(42,157,143,0.4), 0 12px 40px rgba(42,157,143,0.2);
+  transform: translateY(-4px);
+}
+
+/* ----- Animated gradient text (heading accent) ----- */
+.gradient-text {
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--ocean));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 5s ease infinite;
+}
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ----- Aurora glow background (sections) ----- */
+.aurora-bg {
+  position: relative;
+  overflow: hidden;
+}
+.aurora-bg::before {
+  content: '';
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(42,157,143,0.12) 0%, transparent 70%);
+  top: -20%;
+  right: -10%;
+  animation: auroraFloat 8s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+.aurora-bg::after {
+  content: '';
+  position: absolute;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(29,111,166,0.1) 0%, transparent 70%);
+  bottom: -10%;
+  left: -5%;
+  animation: auroraFloat 10s ease-in-out infinite alternate-reverse;
+  pointer-events: none;
+  z-index: 0;
+}
+.aurora-bg .container { position: relative; z-index: 1; }
+@keyframes auroraFloat {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(3%, 5%) scale(1.08); }
+}
+
+/* ----- Floating badge animation ----- */
+.float-badge {
+  animation: floatY 3s ease-in-out infinite;
+}
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* ----- Card tilt on hover (JS-free version) ----- */
+.tilt-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+}
+.tilt-card:hover {
+  transform: perspective(800px) rotateX(2deg) rotateY(-2deg) translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+}
+
+/* ----- Reveal underline on links ----- */
+.underline-reveal {
+  position: relative;
+}
+.underline-reveal::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--secondary);
+  transition: width 0.3s ease;
+}
+.underline-reveal:hover::after { width: 100%; }
+
+/* ----- Pulse dot (availability indicator) ----- */
+.pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+  position: relative;
+}
+.pulse-dot::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: rgba(34,197,94,0.3);
+  border-radius: 50%;
+  animation: pulseDot 1.8s ease-out infinite;
+}
+@keyframes pulseDot {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* ----- Stagger children animations ----- */
+.stagger > * {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.55s cubic-bezier(.22,1,.36,1), transform 0.55s cubic-bezier(.22,1,.36,1);
+  transition-delay: calc(var(--i, 0) * 0.13s);
+}
+/* Parent gets .visible → all children animate */
+.stagger.visible > *, .stagger > *.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ----- Improved fade-in animations ----- */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(.22,1,.36,1), transform 0.6s cubic-bezier(.22,1,.36,1);
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+.fade-in-left {
+  opacity: 0;
+  transform: translateX(-32px);
+  transition: opacity 0.6s cubic-bezier(.22,1,.36,1), transform 0.6s cubic-bezier(.22,1,.36,1);
+}
+.fade-in-left.visible { opacity: 1; transform: translateX(0); }
+
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(32px);
+  transition: opacity 0.6s cubic-bezier(.22,1,.36,1), transform 0.6s cubic-bezier(.22,1,.36,1);
+}
+.fade-in-right.visible { opacity: 1; transform: translateX(0); }
+
+/* ----- Glassmorphism card ----- */
+.glass-card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius-lg);
+}
+
+/* ----- Number counter animate ----- */
+[data-count] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ----- Scroll-triggered count glow ----- */
+@keyframes countGlow {
+  from { text-shadow: 0 0 0 transparent; }
+  50%  { text-shadow: 0 0 24px rgba(244,162,97,0.6); }
+  to   { text-shadow: 0 0 0 transparent; }
+}
+.count-glow { animation: countGlow 1.2s ease forwards; }
+
+/* ----- Image hover zoom (standardized) ----- */
+.img-zoom {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+.img-zoom img {
+  transition: transform 0.6s cubic-bezier(.22,1,.36,1);
+  width: 100%; height: 100%; object-fit: cover;
+}
+.img-zoom:hover img { transform: scale(1.07); }
+
+/* ----- Gradient border button variant ----- */
+.btn-gradient {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  border: none;
+  position: relative;
+  z-index: 0;
+  transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.btn-gradient:hover {
+  opacity: 0.92;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(230,57,70,0.35);
+}
+
+/* ----- Section divider animated ----- */
+.section-divider {
+  display: block;
+  width: 64px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 999px;
+  margin: 20px auto 0;
+  position: relative;
+  overflow: hidden;
+}
+.section-divider::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: rgba(255,255,255,0.5);
+  animation: dividerShimmer 2.5s ease-in-out infinite;
+}
+@keyframes dividerShimmer {
+  from { left: -100%; }
+  to   { left: 200%; }
+}
+
+/* ----- Plan card selected state ----- */
+.plan-card { transition: all 0.25s ease; }
+input[type=radio]:checked + .plan-card,
+input[type=radio]:checked + label .plan-card {
+  border-color: var(--ocean) !important;
+  box-shadow: 0 0 0 3px rgba(29,111,166,0.2), var(--shadow-md) !important;
+  transform: translateY(-3px);
+}
+
+/* ----- Place card media overlay on hover ----- */
+.place-card__media {
+  position: relative;
+}
+.place-card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.place-card:hover .place-card__media::after { opacity: 1; }
+
+/* ----- Location card image ----- */
+.location-card__bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.location-card__bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.location-card:hover .location-card__bg img { transform: scale(1.08); }
+
+/* ================================================================
+   PHONE PREFIX SELECTOR
+   ================================================================ */
+.phone-field {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.phone-prefix {
+  flex-shrink: 0;
+  width: auto;
+  min-width: 110px;
+  padding: 12px 10px;
+  border: 1.5px solid var(--gray-border);
+  border-radius: var(--radius-sm);
+  background: var(--off-white);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--dark);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236C757D' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+.phone-prefix:focus {
+  outline: none;
+  border-color: var(--ocean);
+  box-shadow: 0 0 0 3px rgba(29,111,166,0.15);
+}
+.phone-field .phone-number {
+  flex: 1;
+}
+
+/* ================================================================
+   EXTRA PREMIUM ANIMATIONS
+   ================================================================ */
+
+/* ----- Spotlight hover (card gets a spotlight that follows the section) ----- */
+.spotlight-section {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight-section::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(244,162,97,0.08) 0%, transparent 60%);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+  z-index: 0;
+  opacity: 0;
+}
+.spotlight-section:hover::before { opacity: 1; }
+
+/* ----- Neon glow on active elements ----- */
+.neon-glow {
+  position: relative;
+}
+.neon-glow::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--secondary), var(--primary), var(--ocean));
+  z-index: -1;
+  opacity: 0;
+  filter: blur(8px);
+  transition: opacity 0.4s ease;
+}
+.neon-glow:hover::after { opacity: 0.6; }
+
+/* ----- Typewriter cursor blink ----- */
+.cursor-blink::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: var(--secondary);
+  font-weight: 300;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ----- Orbit animation (decorative circles) ----- */
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(30px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(30px) rotate(-360deg); }
+}
+.orbit-dot {
+  width: 8px; height: 8px;
+  background: var(--secondary);
+  border-radius: 50%;
+  display: inline-block;
+  animation: orbit 3s linear infinite;
+}
+
+/* ----- Liquid button (ripple on click) ----- */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.btn-ripple .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  transform: scale(0);
+  animation: rippleOut 0.6s linear;
+  pointer-events: none;
+}
+@keyframes rippleOut {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ----- Magnetic pull on CTA ----- */
+.btn-primary, .btn-whatsapp, .btn-gradient {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+/* ----- Count-up number highlight ----- */
+.stat-num {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
+/* ----- Animated ring badge ----- */
+.ring-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ring-badge::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--secondary);
+  opacity: 0;
+  transform: scale(0.8);
+  animation: ringPulse 2.5s ease-in-out infinite;
+}
+@keyframes ringPulse {
+  0%   { opacity: 0.6; transform: scale(0.8); }
+  60%  { opacity: 0; transform: scale(1.4); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+/* ----- Gradient border card ----- */
+.gradient-border {
+  position: relative;
+  border-radius: var(--radius-lg);
+  background: white;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--secondary), var(--primary), var(--ocean), var(--accent));
+  background-size: 300% 300%;
+  z-index: -1;
+  animation: gradientShift 5s ease infinite;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.gradient-border:hover::before { opacity: 1; }
+
+/* ----- Blur-in entry (for modal / lazy sections) ----- */
+.blur-in {
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(16px);
+  transition: opacity 0.7s ease, filter 0.7s ease, transform 0.7s ease;
+}
+.blur-in.visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+/* ----- Step icon (process section) ----- */
+.step__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  margin: 12px auto 16px;
+  border: 1.5px solid rgba(255,255,255,0.2);
+}
+.step__num {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--secondary);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+/* ================================================================
+   REACT BITS — ADVANCED ANIMATIONS Vol. 2
+   ================================================================ */
+
+/* ----- Spotlight card (mousemove-driven via JS) ----- */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(244,162,97,0.15) 0%, transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(var(--mx,-999px), var(--my,-999px)) translate(-50%, -50%);
+  z-index: 0;
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+.spotlight-card:hover::before { opacity: 1; }
+.spotlight-card > * { position: relative; z-index: 1; }
+
+/* ----- Infinite marquee strip ----- */
+.marquee-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+  border-top: 1px solid var(--gray-border);
+  border-bottom: 1px solid var(--gray-border);
+  padding: 14px 0;
+  background: var(--off-white);
+}
+.marquee-track {
+  display: inline-flex;
+  gap: 48px;
+  animation: marqueeScroll 22s linear infinite;
+}
+.marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.marquee-item::before {
+  content: '◈';
+  color: var(--secondary);
+  font-size: 0.7rem;
+}
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ----- Glitch text (on hover over headings) ----- */
+.glitch {
+  position: relative;
+}
+.glitch:hover {
+  animation: glitchText 0.4s steps(2) forwards;
+}
+@keyframes glitchText {
+  0%  { text-shadow: 2px 0 var(--primary), -2px 0 var(--ocean); }
+  25% { text-shadow: -3px 0 var(--secondary), 3px 0 var(--primary); clip-path: inset(10% 0 80% 0); }
+  50% { text-shadow: 2px 0 var(--ocean), -2px 0 var(--secondary); clip-path: inset(60% 0 20% 0); }
+  75% { text-shadow: -2px 0 var(--primary), 2px 0 var(--ocean); clip-path: inset(30% 0 40% 0); }
+  100%{ text-shadow: none; clip-path: none; }
+}
+
+/* ----- Morphing blob background ----- */
+.blob-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.blob {
+  position: absolute;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  filter: blur(48px);
+  opacity: 0.08;
+  animation: morphBlob 12s ease-in-out infinite alternate;
+}
+.blob-1 {
+  width: 400px; height: 400px;
+  background: var(--secondary);
+  top: -80px; right: -80px;
+}
+.blob-2 {
+  width: 300px; height: 300px;
+  background: var(--ocean);
+  bottom: -60px; left: -60px;
+  animation-delay: -4s;
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+}
+@keyframes morphBlob {
+  0%  { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: rotate(0deg) scale(1); }
+  50% { border-radius: 50% 50% 30% 70% / 50% 70% 30% 50%; transform: rotate(8deg) scale(1.06); }
+  100%{ border-radius: 60% 40% 70% 30% / 40% 60% 40% 60%; transform: rotate(-4deg) scale(0.95); }
+}
+
+/* ----- Magnetic button (JS adds transform via style attr) ----- */
+.magnetic {
+  transition: transform 0.25s cubic-bezier(.22,1,.36,1);
+}
+
+/* ----- Bordered typing cursor on eyebrow labels ----- */
+.eyebrow-live::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  background: var(--secondary);
+  margin-left: 3px;
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
+}
+
+/* ----- Flip-in on scroll (3D Y axis) ----- */
+.flip-in {
+  opacity: 0;
+  transform: rotateY(40deg) translateY(20px);
+  transform-origin: left center;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.22,1,.36,1);
+  backface-visibility: hidden;
+}
+.flip-in.visible { opacity: 1; transform: rotateY(0deg) translateY(0); }
+
+/* ----- Gradient underline on nav/links ----- */
+a.gradient-underline {
+  background-image: linear-gradient(90deg, var(--primary), var(--secondary));
+  background-size: 0 2px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s ease;
+  padding-bottom: 1px;
+}
+a.gradient-underline:hover { background-size: 100% 2px; }
+
+/* ----- Count badge pop ----- */
+@keyframes badgePop {
+  0%   { transform: scale(0.7); opacity: 0; }
+  60%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.badge-pop { animation: badgePop 0.45s cubic-bezier(.22,1,.36,1) forwards; }

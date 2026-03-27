@@ -16,7 +16,12 @@ related: [[Projects/cabana-la-gabriela/README]], [[cabana-la-gabriela-deploy]]
 - [x] Sistema bilingüe ES/EN
 
 ## Pendientes — Contenido
-- [ ] Agregar fotos reales desde álbum Google Photos a `web/img/`
+- [x] Imágenes reales de lugares turísticos (6 fotos descargadas de Unsplash en `web/img/lugar-*.jpg`)
+- [x] Sin emojis en todo el sitio web (reemplazados por iconos SVG / texto limpio)
+- [x] Animaciones premium CSS (shimmer, tilt, glow, aurora, gradiente animado, pulse dot)
+- [x] Traducciones completas: navbar, footer, calculadora, errores de validación, calendario
+- [x] Sistema de reservas mejorado: huéspedes actualiza calculadora, validación de fechas, errores bilingües
+- [x] Calendario re-renderiza al cambiar idioma
 - [ ] Subir video dron a YouTube (sin listar) y actualizar embed en `galeria.html`
 - [ ] Crear logo y reemplazar emoji 🌴 en navbar
 
@@ -44,10 +49,14 @@ related: [[Projects/cabana-la-gabriela/README]], [[cabana-la-gabriela-deploy]]
 - [x] Mensaje de verificación inline al hacer reserva
 - [x] Reservas guardadas en localStorage
 - [x] Panel admin funciona offline con localStorage
-- [x] Opción de cocinero (+$200.000/día) en formulario de reserva
+- [x] Opción de cocinero (+$100.000/persona/día · 3 comidas incluidas) en formulario de reserva
 - [x] Correo electrónico requerido con validación en formulario
 - [x] Límite de huéspedes por plan (Piso 1: 12, Piso 2+Terraza: 20, Cabaña completa: 40)
-- [x] Calendario de disponibilidad en página de reservas
+- [x] Calendario de disponibilidad en página de reservas (bilingüe)
+- [x] Traducciones corregidas: plan cards, calculadora, chef, calendario, leyenda
+- [x] Ubicación corregida: "entre San Bernardo del Viento y Moñitos" en como-llegar.html e index.html
+- [x] Fórmula cocinero actualizada: noches × personas × $100.000
+- [x] Sistema de reservas funciona desde file:// (sin backend) via localStorage
 - [x] Título galería corregido (sin mención a "Google Photos")
 - [x] Habitaciones renombradas correctamente (no "suite", son habitaciones normales)
 - [x] Bug de `<strong>` en `como-llegar.html` corregido

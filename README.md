@@ -1,9 +1,9 @@
 ---
 title: Proyecto Cabaña La Gabriela — Página Web
-date: 2026-03-17
-tags: [project, web, html, css, javascript, fastapi, colombia]
+date: 2026-03-18
+tags: [project, web, html, css, javascript, fastapi, colombia, cabana-la-gabriela]
 status: active
-related: [[cabana-la-gabriela-tasks]], [[fastapi-sqlite-rest-api]], [[cabana-la-gabriela-deploy]]
+related: [[cabana-la-gabriela-tasks]], [[fastapi-sqlite-rest-api]], [[cabana-la-gabriela-deploy]], [[decision-sistema-reservas-por-piso]], [[agente-ia-cabana-gabriela]]
 ---
 
 # Proyecto: Cabaña La Gabriela — Página Web
@@ -11,7 +11,7 @@ related: [[cabana-la-gabriela-tasks]], [[fastapi-sqlite-rest-api]], [[cabana-la-
 **Estado**: 🟢 Activo
 **Stack**: HTML5, CSS3, JavaScript (Vanilla), FastAPI (Python), SQLite
 **Inicio**: 2026-03-17
-**Meta**: Página web completa para alquiler vacacional de cabaña frente al mar
+**Meta**: Página web completa para alquiler vacacional de cabaña frente al mar Caribe
 
 ---
 
@@ -149,13 +149,49 @@ const API = 'https://TU-BACKEND.onrender.com';
 
 ---
 
+## 🏠 Sistema de Reservas por Piso
+
+Ver decisión completa en [[decision-sistema-reservas-por-piso]].
+
+| Plan | Incluye | Precio/noche | Capacidad |
+|---|---|---|---|
+| Primer Piso | 3 hab. + área social + cocina + 2 baños | $1.000.000 COP | 12 personas |
+| 2° Piso + Terraza | 4 hab. + asoleadero panorámico | $1.500.000 COP | 20 personas |
+| Cabaña Completa | 7 hab. + todos los pisos | $2.000.000 COP | 40+ personas |
+
+**Cocinero opcional**: +$200.000/día — se elige al hacer la reserva.
+
+> [!tip] Disponibilidad
+> El calendario de disponibilidad en `reservas.html` lee automáticamente desde localStorage y color-codea las fechas ocupadas por plan.
+
+---
+
+## 🤖 Agente IA
+
+Existe un prompt completo para un asistente virtual de la cabaña. Ver: [[agente-ia-cabana-gabriela]]
+
+---
+
+## 📸 Imágenes disponibles en web/img/
+
+| Archivo | Uso |
+|---|---|
+| `Hero.jpg` | Hero de index.html |
+| `DJI_0621.jpg`, `DJI_0628.jpg` | Fotos dron (galería / hero) |
+| `DSC_0002.jpg` ... `DSC_0058.jpg` | Fotos habitaciones y espacios |
+| `Asoleadero.jpg` | Terraza del 3° piso |
+
+---
+
 ## ✅ Tareas Pendientes
 
-- [ ] Agregar fotos reales a `web/img/`
-- [ ] Subir video dron a YouTube / Cloudinary y actualizar embed
+- [ ] Integrar imágenes de `web/img/` en páginas (hero, habitaciones, galería)
+- [ ] Buscar e integrar imágenes de lugares cercanos (Playa Venado, Moñitos, Lorica)
+- [ ] Arreglar botones redes sociales en sección Instagram de index.html
+- [ ] Subir video dron a YouTube (sin listar) y actualizar embed en `galeria.html`
 - [ ] Crear logo y reemplazar emoji 🌴 en navbar
 - [ ] Crear página de Facebook "Cabaña La Gabriela"
 - [ ] Comprar dominio (ej: cabanalabgabriela.com)
 - [ ] Deploy en Render (frontend + backend)
-- [ ] Cambiar contraseña admin por defecto
-- [ ] Configurar correos automáticos (opcional: usar SendGrid o Resend)
+- [ ] Cambiar contraseña admin por defecto `gabriela2025`
+- [ ] Configurar correos automáticos (SendGrid o Resend)

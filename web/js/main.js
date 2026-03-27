@@ -91,6 +91,8 @@ function initLangToggle() {
     localStorage.setItem('lang', lang);
     btns.forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
     applyTranslations(lang);
+    // Re-render calendar if available (updates bilingual month name)
+    if (typeof renderCalendar === 'function') renderCalendar();
   }
 
   btns.forEach(btn => {
@@ -125,18 +127,19 @@ function initScrollAnimations() {
         }
       });
     },
-    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
   );
 
-  document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right').forEach(el => {
+  document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right, .blur-in').forEach(el => {
     observer.observe(el);
   });
 
-  // Stagger children
+  // Stagger: observe parent, mark children with --i delay
   document.querySelectorAll('.stagger').forEach(parent => {
     Array.from(parent.children).forEach((child, i) => {
       child.style.setProperty('--i', i);
     });
+    observer.observe(parent);
   });
 }
 
@@ -162,7 +165,7 @@ const PLAN_LABELS = {
 };
 const PLAN_PRICES = { piso1: 1000000, piso2: 1500000, completa: 2000000 };
 const PLAN_MAX    = { piso1: 12, piso2: 20, completa: 40 };
-const CHEF_PRICE  = 200000;
+const CHEF_PRICE  = 100000; // por persona por día — 3 comidas incluidas
 
 function formatCOP(n) {
   return '$' + n.toLocaleString('es-CO');
@@ -177,8 +180,9 @@ function calcNights(entrada, salida) {
 function buildReservationMessage(data) {
   const nights     = calcNights(data.entrada, data.salida);
   const priceNight = PLAN_PRICES[data.plan] || 0;
+  const huespedes  = parseInt(data.huespedes) || 1;
   const chefDays   = data.cocinero === 'si' ? nights : 0;
-  const chefCost   = chefDays * CHEF_PRICE;
+  const chefCost   = chefDays * huespedes * CHEF_PRICE;
   const total      = nights * priceNight + chefCost;
 
   let msg = 'Hola! Me interesa hacer una reserva en Cabana La Gabriela.\n\n';
@@ -194,7 +198,7 @@ function buildReservationMessage(data) {
   msg += '\nPLAN\n';
   msg += 'Plan: ' + (PLAN_LABELS[data.plan] || data.plan || '-') + '\n';
   msg += 'Huespedes: ' + (data.huespedes || '-') + '\n';
-  msg += 'Cocinero: ' + (data.cocinero === 'si' ? 'Si (+$200.000/dia)' : 'No') + '\n';
+  msg += 'Cocinero: ' + (data.cocinero === 'si' ? 'Si (+$100.000/persona/dia · 3 comidas)' : 'No') + '\n';
   msg += '\nPRECIO ESTIMADO\n';
   msg += 'Tarifa por noche: ' + formatCOP(priceNight) + '\n';
   if (chefCost) msg += 'Servicio cocinero: ' + formatCOP(chefCost) + '\n';
@@ -266,21 +270,27 @@ function initReservationForm() {
 
     if (!plan) { calc.classList.remove('visible'); return; }
 
-    const nights     = calcNights(entrada, salida);
-    const priceNight = PLAN_PRICES[plan.value] || 0;
-    const chefCost   = chef && nights ? nights * CHEF_PRICE : 0;
-    const total      = nights * priceNight + chefCost;
+    const nights      = calcNights(entrada, salida);
+    const priceNight  = PLAN_PRICES[plan.value] || 0;
+    const numGuests   = parseInt(form.querySelector('[name=huespedes]')?.value) || 1;
+    const chefCost    = chef && nights ? nights * numGuests * CHEF_PRICE : 0;
+    const total       = nights * priceNight + chefCost;
 
     // Update max guests hint
     const maxGuests = PLAN_MAX[plan.value] || 40;
     const huespedesInput = form.querySelector('[name=huespedes]');
     if (huespedesInput) huespedesInput.max = maxGuests;
     const hint = document.getElementById('huespedesHint');
-    if (hint) hint.textContent = 'Maximo para este plan: ' + maxGuests + ' personas';
+    if (hint) hint.textContent = CONFIG.lang === 'en'
+      ? 'Max for this plan: ' + maxGuests + ' guests'
+      : 'Máximo para este plan: ' + maxGuests + ' personas';
 
-    document.getElementById('calcPlan').textContent       = PLAN_LABELS[plan.value] || plan.value;
-    document.getElementById('calcPriceNight').textContent = formatCOP(priceNight) + ' / noche';
-    document.getElementById('calcNights').textContent     = nights ? nights + (nights === 1 ? ' noche' : ' noches') : '-- (elige fechas)';
+    const PLAN_LABELS_EN = { piso1: 'First Floor', piso2: '2nd Floor + Rooftop', completa: 'Full Cabin' };
+    document.getElementById('calcPlan').textContent       = CONFIG.lang === 'en' ? (PLAN_LABELS_EN[plan.value] || plan.value) : (PLAN_LABELS[plan.value] || plan.value);
+    document.getElementById('calcPriceNight').textContent = formatCOP(priceNight) + (CONFIG.lang === 'en' ? ' / night' : ' / noche');
+    document.getElementById('calcNights').textContent     = nights
+      ? nights + (CONFIG.lang === 'en' ? (nights === 1 ? ' night' : ' nights') : (nights === 1 ? ' noche' : ' noches'))
+      : (CONFIG.lang === 'en' ? '-- (choose dates)' : '-- (elige fechas)');
     document.getElementById('calcTotal').textContent      = total ? formatCOP(total) : '--';
 
     // Show/hide chef row
@@ -305,6 +315,7 @@ function initReservationForm() {
   form.querySelectorAll('[name=cocinero]').forEach(r => r.addEventListener('change', updateCalculator));
   form.querySelector('[name=entrada]')?.addEventListener('change', updateCalculator);
   form.querySelector('[name=salida]')?.addEventListener('change', updateCalculator);
+  form.querySelector('[name=huespedes]')?.addEventListener('input', updateCalculator);
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -339,9 +350,10 @@ function initReservationForm() {
     const huespedesErr = document.getElementById('huespedesError');
     if (!huespedesVal || huespedesVal < 1 || huespedesVal > maxGuests) {
       if (huespedesErr) {
+        const isEN = CONFIG.lang === 'en';
         huespedesErr.textContent = huespedesVal > maxGuests
-          ? 'El plan ' + PLAN_LABELS[planSelected.value] + ' tiene capacidad maxima de ' + maxGuests + ' personas.'
-          : 'Ingresa el numero de huespedes.';
+          ? (isEN ? 'This plan has a max capacity of ' + maxGuests + ' guests.' : 'El plan ' + PLAN_LABELS[planSelected.value] + ' tiene capacidad maxima de ' + maxGuests + ' personas.')
+          : (isEN ? 'Please enter the number of guests.' : 'Ingresa el numero de huespedes.');
         huespedesErr.style.display = 'block';
       }
       form.querySelector('[name=huespedes]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -354,11 +366,11 @@ function initReservationForm() {
     const nights   = calcNights(entrada, salida);
     const price    = PLAN_PRICES[planSelected.value] || 0;
     const cocinero = form.querySelector('[name=cocinero]:checked')?.value || 'no';
-    const chefCost = cocinero === 'si' && nights ? nights * CHEF_PRICE : 0;
+    const chefCost = cocinero === 'si' && nights ? nights * huespedesVal * CHEF_PRICE : 0;
 
     const data = {
       nombre:    form.querySelector('[name=nombre]')?.value || '',
-      telefono:  form.querySelector('[name=telefono]')?.value || '',
+      telefono:  ((form.querySelector('[name=telefono_prefijo]')?.value || '+57') + ' ' + (form.querySelector('[name=telefono]')?.value || '')).trim(),
       correo:    correoVal,
       entrada,
       salida,
@@ -390,7 +402,7 @@ function showBookingSuccess(data) {
       ['Salida',         data.salida  || '--'],
       ['Noches',         data.nights  ? data.nights + ' noche(s)' : '--'],
       ['Huespedes',      data.huespedes || '--'],
-      ['Cocinero',       data.cocinero === 'si' ? 'Si (+$200.000/dia)' : 'No'],
+      ['Cocinero',       data.cocinero === 'si' ? 'Si (+$100.000/persona/dia · 3 comidas)' : 'No'],
       ['Total estimado', data.total ? formatCOP(data.total) : '--'],
       ['Nombre',         data.nombre],
       ['Telefono',       data.telefono],
@@ -436,6 +448,19 @@ async function saveReservation(data) {
     estado:          'pendiente'
   };
 
+  function guardarLocal() {
+    const stored = JSON.parse(localStorage.getItem('cabana_reservas') || '[]');
+    const entry  = { id: Date.now(), ...reserva, fecha_creacion: new Date().toLocaleString('es-CO') };
+    stored.unshift(entry);
+    localStorage.setItem('cabana_reservas', JSON.stringify(stored));
+    return entry;
+  }
+
+  // Sin backend (file:// o local): guardar directo en localStorage
+  if (window.location.protocol === 'file:' || !window.location.hostname) {
+    return guardarLocal();
+  }
+
   try {
     const response = await fetch('/api/reservas', {
       method: 'POST',
@@ -445,13 +470,7 @@ async function saveReservation(data) {
     if (response.ok) return await response.json();
     throw new Error('Server error');
   } catch (err) {
-    // Sin backend: guardar en localStorage para que el admin pueda verlo
-    const stored = JSON.parse(localStorage.getItem('cabana_reservas') || '[]');
-    const entry  = { id: Date.now(), ...reserva, fecha_creacion: new Date().toLocaleString('es-CO') };
-    stored.unshift(entry);
-    localStorage.setItem('cabana_reservas', JSON.stringify(stored));
-    console.info('Reserva guardada localmente (sin backend).', entry);
-    return entry;
+    return guardarLocal();
   }
 }
 
@@ -482,7 +501,13 @@ function initDatePickers() {
   salida.min  = today;
 
   entrada.addEventListener('change', () => {
-    if (entrada.value) salida.min = entrada.value;
+    if (entrada.value) {
+      salida.min = entrada.value;
+      // If salida is set and is before/equal to entrada, clear it
+      if (salida.value && salida.value <= entrada.value) {
+        salida.value = '';
+      }
+    }
   });
 }
 
@@ -566,4 +591,62 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroVideo();
   initMap();
   initTabs();
+  initRipple();
+  initSpotlight();
+  initMagnetic();
+  initFlipIn();
 });
+
+/* ======================== SPOTLIGHT CARDS ======================== */
+function initSpotlight() {
+  document.querySelectorAll('.spotlight-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+}
+
+/* ======================== MAGNETIC BUTTONS ======================== */
+function initMagnetic() {
+  document.querySelectorAll('.magnetic').forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const r = el.getBoundingClientRect();
+      const dx = (e.clientX - r.left - r.width / 2) * 0.28;
+      const dy = (e.clientY - r.top - r.height / 2) * 0.28;
+      el.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+  });
+}
+
+/* ======================== FLIP-IN OBSERVER ======================== */
+function initFlipIn() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.flip-in').forEach(el => obs.observe(el));
+}
+
+/* ======================== RIPPLE EFFECT ======================== */
+function initRipple() {
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.classList.add('btn-ripple');
+    btn.addEventListener('click', function(e) {
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height) * 2;
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 700);
+    });
+  });
+}
