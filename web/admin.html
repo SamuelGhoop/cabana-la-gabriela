@@ -738,7 +738,7 @@ async function exportarCSV() {
       r.id,
       r.nombre,
       r.telefono,
-      r.correo || '',
+      r.email || r.correo || '',
       r.modalidad || '',
       entrada,
       salida,
