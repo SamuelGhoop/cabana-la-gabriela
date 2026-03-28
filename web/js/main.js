@@ -10,6 +10,7 @@ const CONFIG = {
   facebook: 'CabañaLaGabriela',
   coords: { lat: 9.35933, lng: -76.00764 },
   lang: localStorage.getItem('lang') || 'es',
+  contactEmail: 'cabanalagabriela1@gmail.com',
 };
 
 /* ======================== TRADUCCIONES ======================== */
@@ -383,8 +384,18 @@ function initReservationForm() {
       mensaje:   form.querySelector('[name=mensaje]')?.value || '',
     };
 
+    // Validar disponibilidad de fechas contra el calendario
+    if (entrada && salida && checkDateConflict(entrada, salida, planSelected.value)) {
+      const dateErr = document.getElementById('dateConflictError');
+      if (dateErr) { dateErr.style.display = 'block'; dateErr.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      return;
+    }
+    const dateErr = document.getElementById('dateConflictError');
+    if (dateErr) dateErr.style.display = 'none';
+
     saveReservation(data).finally(() => {
       showBookingSuccess(data);
+      if (typeof calInit === 'function') calInit(); // refrescar calendario
     });
   });
 }
@@ -419,13 +430,9 @@ function showBookingSuccess(data) {
   const waLink = document.getElementById('successWhatsApp');
   if (waLink) waLink.href = buildWhatsAppURL(buildReservationMessage(data));
 
-  // Email
+  // Email — muestra correo del negocio (no el del cliente)
   const emailEl = document.getElementById('successEmailText');
-  if (emailEl) {
-    emailEl.textContent = data.correo
-      ? 'Correo: ' + data.correo
-      : 'Sin correo proporcionado';
-  }
+  if (emailEl) emailEl.textContent = CONFIG.contactEmail;
 
   // Mostrar y hacer scroll
   successEl.classList.add('visible');
@@ -462,6 +469,20 @@ async function saveReservation(data) {
     console.warn('Supabase no disponible, guardando local:', err);
     return guardarLocal();
   }
+}
+
+function checkDateConflict(entrada, salida, plan) {
+  if (typeof cachedBookedDates === 'undefined' || !entrada || !salida) return false;
+  let cursor = new Date(entrada + 'T00:00:00');
+  const end  = new Date(salida  + 'T00:00:00');
+  while (cursor < end) {
+    const key   = cursor.toISOString().slice(0, 10);
+    const plans = cachedBookedDates[key] || [];
+    if (plan === 'completa' && plans.length > 0) return true;
+    if (plan !== 'completa' && (plans.includes('completa') || plans.includes(plan))) return true;
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return false;
 }
 
 function validateForm(form) {
