@@ -828,7 +828,7 @@ async function calInit() {
   calYear  = now.getFullYear();
   calMonth = now.getMonth();
   try {
-    const rows = await sbSelect('reservas', 'select=fecha_entrada,fecha_salida,modalidad,estado&estado=neq.cancelada');
+    const rows = await sbSelect('disponibilidad', 'select=*');
     cachedBookedDates = getBookedDatesFromList(rows);
   } catch (e) {
     const local = JSON.parse(localStorage.getItem('cabana_reservas') || '[]');

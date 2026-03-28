@@ -269,13 +269,17 @@
     
     <div class="login-card__title">Panel Administrador</div>
     <div class="login-card__sub">Cabaña La Gabriela</div>
-    <div class="login-error" id="loginError">Contraseña incorrecta. Intenta de nuevo.</div>
+    <div class="login-error" id="loginError">Credenciales incorrectas. Verifica tu correo y contraseña.</div>
     <form id="loginForm">
       <div class="form-group" style="text-align:left;">
-        <label class="form-label">Contraseña</label>
-        <input type="password" id="adminPassword" class="form-control" placeholder="Ingresa tu contraseña" autocomplete="current-password">
+        <label class="form-label">Correo</label>
+        <input type="email" id="adminEmail" class="form-control" placeholder="correo@ejemplo.com" autocomplete="email">
       </div>
-      <button type="submit" class="btn btn-ocean btn-full mt-16">Ingresar →</button>
+      <div class="form-group" style="text-align:left; margin-top:16px;">
+        <label class="form-label">Contraseña</label>
+        <input type="password" id="adminPassword" class="form-control" placeholder="Tu contraseña" autocomplete="current-password">
+      </div>
+      <button type="submit" id="loginBtn" class="btn btn-ocean btn-full mt-16">Ingresar →</button>
     </form>
     <a href="index.html" style="display:block; margin-top:20px; font-size:0.82rem; color:var(--gray);">← Volver al sitio</a>
   </div>
@@ -394,27 +398,17 @@
    ADMIN JS
    ============================================================ */
 
-const API = '';  // Si backend corre en mismo origen, dejar vacío.
-                  // Si corre en otro servidor: 'http://localhost:8000'
-
-// Contraseña local (sin backend). Cámbiala si cambias la del backend.
-const LOCAL_PASSWORD = 'gabriela2025';
-
 let currentPage   = 0;
 const PAGE_SIZE   = 20;
 let totalRecords  = 0;
 let searchTimer   = null;
 let authenticated = false;
-let dataMode      = 'api'; // 'api' | 'local'
 
-function enterAdmin(mode) {
-  dataMode = mode;
+function enterAdmin() {
   authenticated = true;
   document.getElementById('loginPage').style.display = 'none';
   document.getElementById('adminPanel').classList.add('visible');
-  if (mode === 'local') {
-    document.querySelector('.admin-topbar__user').textContent = '⚠️ Modo local (sin servidor)';
-  }
+  document.querySelector('.admin-topbar__user').textContent = 'Admin';
   loadStats();
   loadReservas();
 }
@@ -422,43 +416,47 @@ function enterAdmin(mode) {
 /* ===== AUTH ===== */
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const pw        = document.getElementById('adminPassword').value;
-  const errorDiv  = document.getElementById('loginError');
+  const email    = document.getElementById('adminEmail').value.trim();
+  const pw       = document.getElementById('adminPassword').value;
+  const errorDiv = document.getElementById('loginError');
+  const btn      = document.getElementById('loginBtn');
+
   errorDiv.style.display = 'none';
+  btn.textContent = 'Verificando...';
+  btn.disabled = true;
 
-  // 1. Intentar backend
   try {
-    const res = await fetch(`${API}/api/admin/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: pw })
-    });
-    if (res.ok) { enterAdmin('api'); return; }
-  } catch (_) { /* backend no disponible */ }
-
-  // 2. Verificación local (cuando no hay servidor)
-  if (pw === LOCAL_PASSWORD) { enterAdmin('local'); return; }
-
-  errorDiv.style.display = 'block';
+    await sbSignIn(email, pw);
+    enterAdmin();
+  } catch (err) {
+    errorDiv.textContent = 'Credenciales incorrectas. Verifica tu correo y contraseña.';
+    errorDiv.style.display = 'block';
+  } finally {
+    btn.textContent = 'Ingresar →';
+    btn.disabled = false;
+  }
 });
 
-function logout() {
+async function logout() {
+  await sbSignOut();
   authenticated = false;
   document.getElementById('loginPage').style.display = 'flex';
   document.getElementById('adminPanel').classList.remove('visible');
+  document.getElementById('adminEmail').value    = '';
   document.getElementById('adminPassword').value = '';
 }
 
+// Restaurar sesión existente automáticamente
+if (sbGetSession()) enterAdmin();
+
 /* ===== STATS ===== */
 async function loadStats() {
-  if (dataMode === 'local') { loadLocalStats(); return; }
   try {
-    const res = await fetch(`${API}/api/reservas/stats`);
-    const d = await res.json();
-    document.getElementById('statTotal').textContent = d.total;
-    document.getElementById('statPendientes').textContent = d.pendientes;
-    document.getElementById('statConfirmadas').textContent = d.confirmadas;
-    document.getElementById('statCanceladas').textContent = d.canceladas;
+    const rows = await sbSelect('reservas', 'select=estado');
+    document.getElementById('statTotal').textContent       = rows.length;
+    document.getElementById('statPendientes').textContent  = rows.filter(r => r.estado === 'pendiente').length;
+    document.getElementById('statConfirmadas').textContent = rows.filter(r => r.estado === 'confirmada').length;
+    document.getElementById('statCanceladas').textContent  = rows.filter(r => r.estado === 'cancelada').length;
   } catch (err) {
     loadLocalStats();
   }
