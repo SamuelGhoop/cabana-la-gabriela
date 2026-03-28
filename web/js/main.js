@@ -435,41 +435,31 @@ function showBookingSuccess(data) {
 
 async function saveReservation(data) {
   const reserva = {
-    nombre:          data.nombre,
-    telefono:        data.telefono,
-    correo:          data.correo,
-    modalidad:       data.plan || 'cotizacion',
-    tipo_habitacion: data.plan || 'indiferente',
-    piso:            data.plan || 'indiferente',
-    fecha_entrada:   data.entrada,
-    fecha_salida:    data.salida,
-    huespedes:       parseInt(data.huespedes) || 1,
-    mensaje:         (data.mensaje || '') + (data.total ? ` | Total estimado: ${formatCOP(data.total)}` : ''),
-    estado:          'pendiente'
+    nombre:        data.nombre,
+    email:         data.correo || null,
+    telefono:      data.telefono,
+    modalidad:     data.plan || 'cotizacion',
+    fecha_entrada: data.entrada || null,
+    fecha_salida:  data.salida  || null,
+    huespedes:     parseInt(data.huespedes) || 1,
+    cocinero:      data.cocinero === 'si',
+    notas:         (data.mensaje || '') + (data.total ? ` | Total estimado: ${formatCOP(data.total)}` : ''),
+    estado:        'pendiente'
   };
 
   function guardarLocal() {
     const stored = JSON.parse(localStorage.getItem('cabana_reservas') || '[]');
-    const entry  = { id: Date.now(), ...reserva, fecha_creacion: new Date().toLocaleString('es-CO') };
+    const entry  = { id: Date.now(), ...reserva, correo: data.correo, fecha_creacion: new Date().toLocaleString('es-CO') };
     stored.unshift(entry);
     localStorage.setItem('cabana_reservas', JSON.stringify(stored));
     return entry;
   }
 
-  // Sin backend (file:// o local): guardar directo en localStorage
-  if (window.location.protocol === 'file:' || !window.location.hostname) {
-    return guardarLocal();
-  }
-
   try {
-    const response = await fetch('/api/reservas', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(reserva)
-    });
-    if (response.ok) return await response.json();
-    throw new Error('Server error');
+    const result = await sbInsert('reservas', reserva);
+    return result;
   } catch (err) {
+    console.warn('Supabase no disponible, guardando local:', err);
     return guardarLocal();
   }
 }

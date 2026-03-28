@@ -6,6 +6,10 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Panel Administrador | Cabaña La Gabriela</title>
   <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>emailjs.init('CIWyD39pDxPgF3h8j');</script>
+  <script src="js/supabase.js"></script>
   <style>
     body { background: #F0F2F5; font-family: var(--font-body); }
 
@@ -335,7 +339,7 @@
         <div class="table-card__title">Reservas</div>
         <div class="table-card__actions">
           <button class="btn btn-accent btn-sm" onclick="loadReservas()">Actualizar</button>
-          <button class="btn btn-ocean btn-sm" onclick="exportarCSV()">Exportar CSV</button>
+          <button class="btn btn-ocean btn-sm" onclick="exportarCSV()">⬇ Exportar Excel</button>
         </div>
       </div>
 
@@ -474,24 +478,32 @@ function getLocalReservas() {
 
 /* ===== LOAD TABLE ===== */
 async function loadReservas() {
-  if (dataMode === 'local') { loadLocalReservas(); return; }
-
-  const q      = document.getElementById('searchInput').value.trim();
+  const q      = document.getElementById('searchInput').value.trim().toLowerCase();
   const estado = document.getElementById('estadoFilter').value;
-  const params = new URLSearchParams({ limit: PAGE_SIZE, offset: currentPage * PAGE_SIZE });
-  if (q)      params.append('q', q);
-  if (estado) params.append('estado', estado);
 
   try {
-    const res = await fetch(`${API}/api/reservas?${params}`);
-    const data = await res.json();
-    totalRecords = data.total;
-    renderTable(data.data);
+    let query = 'select=*&order=fecha_creacion.desc';
+    if (estado) query += `&estado=eq.${estado}`;
+
+    let rows = await sbSelect('reservas', query);
+
+    if (q) {
+      rows = rows.filter(r =>
+        (r.nombre   || '').toLowerCase().includes(q) ||
+        (r.telefono || '').toLowerCase().includes(q) ||
+        (r.email    || '').toLowerCase().includes(q) ||
+        (r.notas    || '').toLowerCase().includes(q)
+      );
+    }
+
+    totalRecords = rows.length;
+    const page = rows.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
+    renderTable(page);
     updatePagination();
-    document.getElementById('filterCount').textContent = `${data.total} reserva${data.total !== 1 ? 's' : ''}`;
+    document.getElementById('filterCount').textContent = `${rows.length} reserva${rows.length !== 1 ? 's' : ''}`;
     loadStats();
   } catch (err) {
-    // Si el API falla, cambiar a modo local automáticamente
+    console.warn('Supabase no disponible, cargando local:', err);
     dataMode = 'local';
     loadLocalReservas();
   }
@@ -519,12 +531,14 @@ function loadLocalReservas() {
   loadLocalStats();
 }
 
+let tablaRows = [];
+
 function renderTable(rows) {
+  tablaRows = rows;
   const tbody = document.getElementById('reservasTableBody');
   if (!rows.length) {
     tbody.innerHTML = `<tr><td colspan="10">
       <div class="empty-state">
-        
         <div class="empty-state__text">No hay reservas que mostrar.</div>
       </div>
     </td></tr>`;
@@ -538,7 +552,7 @@ function renderTable(rows) {
       <td>
         <div class="td-contact">
           <div>${escHtml(r.telefono || '')}</div>
-          <div>${escHtml(r.correo || '—')}</div>
+          <div>${escHtml(r.email || r.correo || '—')}</div>
         </div>
       </td>
       <td>${escHtml(r.modalidad || '—')}</td>
@@ -547,17 +561,17 @@ function renderTable(rows) {
         <div>↙ ${r.fecha_salida || '—'}</div>
       </td>
       <td>${r.huespedes || '—'}</td>
-      <td class="td-msg" title="${escHtml(r.mensaje || '')}">${escHtml(r.mensaje || '—')}</td>
+      <td class="td-msg" title="${escHtml(r.notas || r.mensaje || '')}">${escHtml(r.notas || r.mensaje || '—')}</td>
       <td>
         <span class="status-badge status-${r.estado}">${estadoLabel(r.estado)}</span>
       </td>
       <td style="font-size:0.78rem; color:var(--gray); white-space:nowrap;">${formatDate(r.fecha_creacion)}</td>
       <td>
         <div class="action-btns">
-          <button class="action-btn confirm" onclick="cambiarEstado(${r.id}, 'confirmada')" title="Confirmar"></button>
-          <button class="action-btn cancel"  onclick="cambiarEstado(${r.id}, 'cancelada')"  title="Cancelar">⏸</button>
-          <button class="action-btn whatsapp" onclick="abrirWhatsApp('${escHtml(r.telefono || '')}', '${escHtml(r.nombre || '')}')" title="WhatsApp"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></button>
-          <button class="action-btn delete"  onclick="eliminar(${r.id})" title="Eliminar">✕</button>
+          <button class="action-btn confirm" onclick="confirmarYNotificar(${r.id})" title="Confirmar y enviar WhatsApp">✓</button>
+          <button class="action-btn cancel"  onclick="cambiarEstado(${r.id}, 'cancelada')" title="Cancelar">✕</button>
+          <button class="action-btn whatsapp" onclick="abrirWhatsApp(${r.id})" title="Enviar WhatsApp"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></button>
+          <button class="action-btn delete"  onclick="eliminar(${r.id})" title="Eliminar">🗑</button>
         </div>
       </td>
     </tr>
@@ -566,44 +580,95 @@ function renderTable(rows) {
 
 /* ===== ACTIONS ===== */
 async function cambiarEstado(id, estado) {
-  if (dataMode === 'local') {
+  try {
+    await sbUpdate('reservas', id, { estado });
+  } catch (err) {
+    // fallback local
     const rows = getLocalReservas();
     const idx = rows.findIndex(r => r.id === id);
     if (idx !== -1) { rows[idx].estado = estado; localStorage.setItem('cabana_reservas', JSON.stringify(rows)); }
-    loadReservas();
-    return;
   }
-  try {
-    await fetch(`${API}/api/reservas/${id}/estado`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ estado })
-    });
-    loadReservas();
-  } catch (err) {
-    alert('Error al cambiar estado. ¿Está el backend activo?');
-  }
+  loadReservas();
 }
 
 async function eliminar(id) {
   if (!confirm(`¿Eliminar la reserva #${id}? Esta acción no se puede deshacer.`)) return;
-  if (dataMode === 'local') {
+  try {
+    await sbDelete('reservas', id);
+  } catch (err) {
     const rows = getLocalReservas().filter(r => r.id !== id);
     localStorage.setItem('cabana_reservas', JSON.stringify(rows));
-    loadReservas();
-    return;
   }
-  try {
-    await fetch(`${API}/api/reservas/${id}`, { method: 'DELETE' });
-    loadReservas();
-  } catch (err) {
-    alert('Error al eliminar. ¿Está el backend activo?');
-  }
+  loadReservas();
 }
 
-function abrirWhatsApp(tel, nombre) {
-  const num = tel.replace(/\D/g, '');
-  const msg = encodeURIComponent(`Hola ${nombre}, te escribimos desde Cabaña La Gabriela sobre tu reserva.`);
+const PLAN_NOMBRES = { piso1: 'Primer Piso', piso2: '2° Piso + Terraza', completa: 'Cabaña Completa' };
+const PLAN_PRECIOS = { piso1: 1000000, piso2: 1500000, completa: 2000000 };
+
+function buildMensajeConfirmacion(r) {
+  const nights = (r.fecha_entrada && r.fecha_salida)
+    ? Math.max(0, (new Date(r.fecha_salida) - new Date(r.fecha_entrada)) / 86400000)
+    : 0;
+  const precio = PLAN_PRECIOS[r.modalidad] || 0;
+  const total  = nights && precio ? '$' + (nights * precio).toLocaleString('es-CO') : '—';
+  const plan   = PLAN_NOMBRES[r.modalidad] || r.modalidad || '—';
+
+  return `Hola ${r.nombre}! 🌴 Te escribimos de *Cabaña La Gabriela*.
+
+✅ *Tu reserva ha sido CONFIRMADA*
+
+📋 *Detalles:*
+• Plan: ${plan}
+• Llegada: ${r.fecha_entrada || '—'}
+• Salida: ${r.fecha_salida || '—'}
+• Noches: ${nights || '—'}
+• Huéspedes: ${r.huespedes || '—'}
+• Total: ${total}
+
+📍 *Ubicación:* Playa Venado, entre Moñitos y San Bernardo del Viento, Córdoba.
+🗺️ GPS: 9.35933, -76.00764
+
+Cualquier duda estamos aquí. ¡Te esperamos! 🌊`;
+}
+
+async function confirmarYNotificar(id) {
+  await cambiarEstado(id, 'confirmada');
+
+  const r = tablaRows.find(x => x.id === id);
+  if (r && r.email) {
+    const nights = (r.fecha_entrada && r.fecha_salida)
+      ? Math.max(0, (new Date(r.fecha_salida) - new Date(r.fecha_entrada)) / 86400000)
+      : 0;
+    const precio = PLAN_PRECIOS[r.modalidad] || 0;
+    const total  = nights && precio ? '$' + (nights * precio).toLocaleString('es-CO') + ' COP' : '—';
+    const plan   = PLAN_NOMBRES[r.modalidad] || r.modalidad || '—';
+
+    emailjs.send('service_w5t4e4k', 'template_b4b9rpe', {
+      email_cliente: r.email,
+      nombre:   r.nombre || '—',
+      checkin:  r.fecha_entrada || '—',
+      checkout: r.fecha_salida  || '—',
+      noches:   nights || '—',
+      huespedes: r.huespedes || '—',
+      cocinero: r.cocinero ? 'Sí' : 'No',
+      total:    total,
+      plan:     plan,
+    }).then(() => {
+      console.log('Email de confirmación enviado a', r.email);
+    }).catch(err => {
+      console.error('Error enviando email:', err);
+      alert('Reserva confirmada, pero hubo un error enviando el correo: ' + (err.text || err));
+    });
+  }
+
+  abrirWhatsApp(id);
+}
+
+function abrirWhatsApp(id) {
+  const r = tablaRows.find(x => x.id === id);
+  if (!r || !r.telefono) { alert('No hay número de teléfono para este cliente.'); return; }
+  const num = r.telefono.replace(/\D/g, '');
+  const msg = encodeURIComponent(buildMensajeConfirmacion(r));
   window.open(`https://wa.me/${num}?text=${msg}`, '_blank');
 }
 
@@ -644,7 +709,7 @@ function formatDate(dt) {
   return new Date(dt).toLocaleDateString('es-CO', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' });
 }
 
-/* ===== EXPORT CSV ===== */
+/* ===== EXPORT EXCEL ===== */
 function exportarCSV() {
   if (dataMode !== 'local') {
     window.location.href = `${API}/api/reservas/exportar/csv`;
@@ -653,27 +718,59 @@ function exportarCSV() {
   const rows = getLocalReservas();
   if (!rows.length) { alert('No hay reservas guardadas para exportar.'); return; }
 
-  const headers = ['ID','Nombre','Teléfono','Correo','Modalidad','Tipo Hab.','Piso','Entrada','Salida','Huéspedes','Mensaje','Estado','Creado'];
-  const escape  = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
-  const csv     = [
-    headers.map(escape).join(','),
-    ...rows.map(r => [
-      r.id, r.nombre, r.telefono, r.correo||'',
-      r.modalidad||'', r.tipo_habitacion||'', r.piso||'',
-      r.fecha_entrada||'', r.fecha_salida||'', r.huespedes||'',
-      r.mensaje||'', r.estado, r.fecha_creacion||''
-    ].map(escape).join(','))
-  ].join('\n');
+  const headers = ['ID','Nombre','Teléfono','Correo','Plan','Entrada','Salida','Noches','Huéspedes','Cocinero','Total estimado','Mensaje','Estado','Creado'];
 
-  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = `reservas_${new Date().toISOString().slice(0,10)}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const data = rows.map(r => {
+    const entrada = r.fecha_entrada || '';
+    const salida  = r.fecha_salida  || '';
+    const nights  = (entrada && salida)
+      ? Math.max(0, (new Date(salida) - new Date(entrada)) / 86400000)
+      : '';
+    const planPrices = { piso1: 1000000, piso2: 1500000, completa: 2000000 };
+    const price  = planPrices[r.modalidad] || 0;
+    const chef   = (r.mensaje || '').includes('cocinero') || r.cocinero === 'si';
+    const total  = nights && price ? nights * price : '';
+
+    return [
+      r.id,
+      r.nombre,
+      r.telefono,
+      r.correo || '',
+      r.modalidad || '',
+      entrada,
+      salida,
+      nights || '',
+      r.huespedes || '',
+      chef ? 'Sí' : 'No',
+      total ? '$' + Number(total).toLocaleString('es-CO') : '',
+      r.mensaje || '',
+      r.estado,
+      r.fecha_creacion || ''
+    ];
+  });
+
+  const wsData = [headers, ...data];
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Auto-fit column widths
+  const colWidths = headers.map((h, i) => {
+    const maxLen = wsData.reduce((max, row) => {
+      const val = row[i] != null ? String(row[i]) : '';
+      return Math.max(max, val.length);
+    }, h.length);
+    return { wch: Math.min(maxLen + 2, 50) };
+  });
+  ws['!cols'] = colWidths;
+
+  // Header row styling (bold)
+  headers.forEach((_, i) => {
+    const cell = ws[XLSX.utils.encode_cell({ r: 0, c: i })];
+    if (cell) cell.s = { font: { bold: true } };
+  });
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Reservas');
+  XLSX.writeFile(wb, `reservas_cabana_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
 /* ===== DEMO DATA (cuando no hay backend y localStorage está vacío) ===== */
