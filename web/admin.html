@@ -502,7 +502,6 @@ async function loadReservas() {
     loadStats();
   } catch (err) {
     console.warn('Supabase no disponible, cargando local:', err);
-    dataMode = 'local';
     loadLocalReservas();
   }
 }
@@ -713,13 +712,14 @@ function formatDate(dt) {
 }
 
 /* ===== EXPORT EXCEL ===== */
-function exportarCSV() {
-  if (dataMode !== 'local') {
-    window.location.href = `${API}/api/reservas/exportar/csv`;
-    return;
+async function exportarCSV() {
+  let rows;
+  try {
+    rows = await sbSelect('reservas', 'select=*&order=fecha_creacion.desc');
+  } catch (err) {
+    rows = getLocalReservas();
   }
-  const rows = getLocalReservas();
-  if (!rows.length) { alert('No hay reservas guardadas para exportar.'); return; }
+  if (!rows.length) { alert('No hay reservas para exportar.'); return; }
 
   const headers = ['ID','Nombre','Teléfono','Correo','Plan','Entrada','Salida','Noches','Huéspedes','Cocinero','Total estimado','Mensaje','Estado','Creado'];
 
