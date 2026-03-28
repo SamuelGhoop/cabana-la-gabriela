@@ -1,157 +1,43 @@
----
-title: Proyecto Cabaña La Gabriela — Página Web
-date: 2026-03-18
-tags: [project, web, html, css, javascript, fastapi, colombia, cabana-la-gabriela]
-status: active
-related: [[cabana-la-gabriela-tasks]], [[fastapi-sqlite-rest-api]], [[cabana-la-gabriela-deploy]], [[decision-sistema-reservas-por-piso]], [[agente-ia-cabana-gabriela]]
----
+# Cabaña La Gabriela — Sitio Web
 
-# Proyecto: Cabaña La Gabriela — Página Web
+Sitio web de alquiler vacacional para **Cabaña La Gabriela**, ubicada en Playa Venado, entre Moñitos y San Bernardo del Viento, Córdoba, Colombia.
 
-**Estado**: 🟢 Activo
-**Stack**: HTML5, CSS3, JavaScript (Vanilla), FastAPI (Python), SQLite
-**Inicio**: 2026-03-17
-**Meta**: Página web completa para alquiler vacacional de cabaña frente al mar Caribe
+**Demo:** [verdant-heliotrope-c68fde.netlify.app](https://verdant-heliotrope-c68fde.netlify.app)
 
 ---
 
-## 📁 Estructura del Proyecto
+## Stack
+
+- **Frontend:** HTML5, CSS3, JavaScript Vanilla (sin frameworks)
+- **Base de datos:** Supabase (PostgreSQL en la nube)
+- **Hosting:** Netlify (auto-deploy desde GitHub)
+- **Email:** EmailJS (confirmaciones al cliente)
+- **Chatbot:** Groq API — Llama 3.3 70B
+
+---
+
+## Estructura
 
 ```
-cabana-la-gabriela/
-├── web/                          ← Frontend (HTML/CSS/JS)
-│   ├── index.html                ← Página principal (Hero dron, secciones)
-│   ├── habitaciones.html         ← Detalle de 7 habitaciones en 3 pisos
-│   ├── galeria.html              ← Galería de fotos y video dron
-│   ├── lugares.html              ← Playas y destinos cercanos
-│   ├── como-llegar.html          ← Direcciones + Google Maps embed
-│   ├── reservas.html             ← Formulario de reserva → WhatsApp
-│   ├── reserva-exitosa.html      ← Página de confirmación
-│   ├── admin.html                ← Panel administrador
-│   ├── css/
-│   │   └── styles.css            ← Estilos compartidos (design system)
-│   ├── js/
-│   │   └── main.js               ← JS principal (nav, animaciones, form)
-│   └── img/                      ← Imágenes (agregar aquí)
-│       ├── hero.jpg
-│       ├── fachada.jpg
-│       ├── habitacion.jpg
-│       └── extra1-extra8.jpg
-└── backend/
-    ├── app.py                    ← FastAPI + SQLite
-    ├── requirements.txt
-    └── render.yaml               ← Config para deploy en Render
+web/
+├── index.html              ← Página principal
+├── habitaciones.html       ← Detalle de habitaciones
+├── galeria.html            ← Galería de fotos y video
+├── lugares.html            ← Playas y destinos cercanos
+├── como-llegar.html        ← Cómo llegar + mapa
+├── reservas.html           ← Formulario de reserva + calendario
+├── reserva-exitosa.html    ← Confirmación de solicitud
+├── admin.html              ← Panel administrador (protegido)
+├── css/styles.css          ← Design system compartido
+└── js/
+    ├── main.js             ← Lógica principal y formulario
+    ├── supabase.js         ← Cliente Supabase (CRUD + auth)
+    └── chatbot.js          ← Widget chatbot IA
 ```
 
 ---
 
-## 🚀 Correr Localmente
-
-### Frontend (sin backend)
-Abre `web/index.html` directamente en el navegador. Funciona sin servidor.
-
-### Backend
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app:app --reload --port 8000
-```
-
-API disponible en: `http://localhost:8000`
-Docs automáticas: `http://localhost:8000/docs`
-
-### Con backend activo, actualizar en main.js:
-```js
-const API = 'http://localhost:8000';
-```
-
----
-
-## 📸 Agregar Fotos
-
-1. Copia tus fotos a `web/img/`
-2. En cada `<div class="gallery-item__media">` reemplaza el emoji por:
-   ```html
-   <img src="img/tu-foto.jpg" alt="Descripción" loading="lazy">
-   ```
-3. En `index.html` hero, reemplaza el fallback:
-   ```html
-   <img src="img/hero.jpg" alt="Vista del mar" class="hero__fallback">
-   ```
-
----
-
-## 🎬 Video del Dron
-
-El archivo `drone.MP4` es demasiado grande para GitHub (>100MB). Opciones:
-
-### YouTube (recomendado — gratis)
-1. Sube el video a YouTube como "No listado"
-2. En `galeria.html`, reemplaza el div `.video-placeholder` por:
-```html
-<iframe width="100%" style="aspect-ratio:16/9;"
-  src="https://www.youtube.com/embed/TU_VIDEO_ID?rel=0"
-  frameborder="0" allowfullscreen></iframe>
-```
-3. Para el hero en `index.html`, pon el video en `<source src="...">` dentro del `<video>`.
-
-### Cloudinary (también gratis hasta cierto límite)
-1. Sube en cloudinary.com
-2. Usa la URL directa en el `<source src="TU_URL.mp4">` del `<video>`
-
----
-
-## 🔐 Panel Administrador
-
-URL: `/admin.html`
-Contraseña por defecto: `gabriela2025`
-
-**Para cambiar la contraseña:**
-```python
-import hashlib
-print(hashlib.sha256("TU_NUEVA_CONTRASEÑA".encode()).hexdigest())
-```
-Copia el hash resultante en la variable de entorno `ADMIN_PASSWORD_HASH` en Render.
-
----
-
-## 🌐 Deploy en Render
-
-### Frontend (estático)
-1. Crea un "Static Site" en render.com
-2. Apunta al directorio `web/`
-3. Publish directory: `.` (o `web/`)
-
-### Backend (API)
-1. Crea un "Web Service" en render.com
-2. Apunta al directorio `backend/`
-3. Build: `pip install -r requirements.txt`
-4. Start: `uvicorn app:app --host 0.0.0.0 --port $PORT`
-5. Agrega disk persistente para `reservas.db`
-6. Configura `ADMIN_PASSWORD_HASH` como variable de entorno
-
-### Conectar frontend con backend
-En `web/js/main.js`, cambia:
-```js
-const API = 'https://TU-BACKEND.onrender.com';
-```
-
----
-
-## 📱 Información de Contacto
-
-- **WhatsApp**: +57 313 754 9732
-- **Instagram**: @lagabriela06
-- **TikTok**: @la_gabriela06
-- **Facebook**: Cabaña La Gabriela
-- **Ubicación GPS**: 9.35933, -76.00764
-- **Dirección**: Playa Venado, ruta entre Moñitos y San Bernardo del Viento, Córdoba
-
----
-
-## 🏠 Sistema de Reservas por Piso
-
-Ver decisión completa en [[decision-sistema-reservas-por-piso]].
+## Planes y precios
 
 | Plan | Incluye | Precio/noche | Capacidad |
 |---|---|---|---|
@@ -159,39 +45,81 @@ Ver decisión completa en [[decision-sistema-reservas-por-piso]].
 | 2° Piso + Terraza | 4 hab. + asoleadero panorámico | $1.500.000 COP | 20 personas |
 | Cabaña Completa | 7 hab. + todos los pisos | $2.000.000 COP | 40+ personas |
 
-**Cocinero opcional**: +$200.000/día — se elige al hacer la reserva.
-
-> [!tip] Disponibilidad
-> El calendario de disponibilidad en `reservas.html` lee automáticamente desde localStorage y color-codea las fechas ocupadas por plan.
+**Cocinero opcional:** +$100.000 COP/persona/día (3 comidas incluidas)
 
 ---
 
-## 🤖 Agente IA
+## Flujo de reservas
 
-Existe un prompt completo para un asistente virtual de la cabaña. Ver: [[agente-ia-cabana-gabriela]]
+1. Cliente llena el formulario en `reservas.html`
+2. La solicitud se guarda en Supabase con estado `pendiente`
+3. El administrador la revisa en `admin.html`
+4. Al confirmar → se envía WhatsApp + email automático al cliente
+5. Las fechas se bloquean en el calendario solo al **confirmar** (no al solicitar)
 
 ---
 
-## 📸 Imágenes disponibles en web/img/
+## Panel Administrador
 
-| Archivo | Uso |
+URL: `/admin.html`
+
+Login con email y contraseña configurados en **Supabase Authentication**.
+El acceso está protegido por Supabase Auth + Row Level Security (RLS).
+
+Funciones:
+- Ver, filtrar y buscar reservas en tiempo real
+- Confirmar reserva → WhatsApp + email automático al cliente
+- Cambiar estado (pendiente / confirmada / cancelada)
+- Exportar reservas a Excel (.xlsx)
+
+---
+
+## Deploy
+
+El sitio se despliega automáticamente en Netlify al hacer `git push`:
+
+```bash
+git add web/
+git commit -m "descripción del cambio"
+git push origin main
+# Netlify redeploya en ~30 segundos
+```
+
+**Publish directory:** `web/`
+**Build command:** *(vacío — sitio estático)*
+
+---
+
+## Servicios externos
+
+| Servicio | Uso |
 |---|---|
-| `Hero.jpg` | Hero de index.html |
-| `DJI_0621.jpg`, `DJI_0628.jpg` | Fotos dron (galería / hero) |
-| `DSC_0002.jpg` ... `DSC_0058.jpg` | Fotos habitaciones y espacios |
-| `Asoleadero.jpg` | Terraza del 3° piso |
+| Supabase | Base de datos de reservas + autenticación admin |
+| EmailJS | Emails de confirmación al cliente |
+| Groq (Llama 3.3 70B) | Chatbot de atención al visitante |
+| Netlify | Hosting y deploy continuo |
 
 ---
 
-## ✅ Tareas Pendientes
+## Video dron
 
-- [ ] Integrar imágenes de `web/img/` en páginas (hero, habitaciones, galería)
-- [ ] Buscar e integrar imágenes de lugares cercanos (Playa Venado, Moñitos, Lorica)
-- [ ] Arreglar botones redes sociales en sección Instagram de index.html
-- [ ] Subir video dron a YouTube (sin listar) y actualizar embed en `galeria.html`
-- [ ] Crear logo y reemplazar emoji 🌴 en navbar
-- [ ] Crear página de Facebook "Cabaña La Gabriela"
-- [ ] Comprar dominio (ej: cabanalabgabriela.com)
-- [ ] Deploy en Render (frontend + backend)
-- [ ] Cambiar contraseña admin por defecto `gabriela2025`
-- [ ] Configurar correos automáticos (SendGrid o Resend)
+El archivo de video es demasiado grande para GitHub. Para agregarlo:
+
+1. Sube el video a YouTube como **No listado**
+2. En `galeria.html`, reemplaza el placeholder por:
+```html
+<iframe width="100%" style="aspect-ratio:16/9"
+  src="https://www.youtube.com/embed/TU_VIDEO_ID?rel=0"
+  frameborder="0" allowfullscreen></iframe>
+```
+
+---
+
+## Contacto
+
+- **WhatsApp:** +57 313 754 9732
+- **Correo:** cabanalagabriela1@gmail.com
+- **Instagram:** [@lagabriela06](https://instagram.com/lagabriela06)
+- **TikTok:** @la_gabriela06
+- **GPS:** [9.35933, -76.00764](https://maps.google.com/?q=9.35933,-76.00764)
+- **Ubicación:** Playa Venado, entre Moñitos y San Bernardo del Viento, Córdoba
