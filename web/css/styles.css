@@ -1135,10 +1135,8 @@ tbody td {
   transition: all 0.2s;
 }
 .booking-success__channel svg { width: 20px; height: 20px; flex-shrink: 0; fill: currentColor; }
-.booking-success__channel.ch-whatsapp { background: #25D366; border-color: #25D366; color: white; }
-.booking-success__channel.ch-whatsapp:hover { background: #1dab55; }
-.booking-success__channel.ch-email { background: white; color: var(--dark); }
-.booking-success__channel.ch-email:hover { border-color: var(--ocean); color: var(--ocean); }
+.booking-success__channel.ch-whatsapp { background: #25D366; border-color: #25D366; color: white; cursor: default; }
+.booking-success__channel.ch-email { background: white; color: var(--dark); cursor: default; }
 
 /* ======================== UTILITIES ======================== */
 .hidden { display: none !important; }

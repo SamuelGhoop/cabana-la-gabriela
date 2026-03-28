@@ -606,29 +606,32 @@ const PLAN_NOMBRES = { piso1: 'Primer Piso', piso2: '2° Piso + Terraza', comple
 const PLAN_PRECIOS = { piso1: 1000000, piso2: 1500000, completa: 2000000 };
 
 function buildMensajeConfirmacion(r) {
-  const nights = (r.fecha_entrada && r.fecha_salida)
+  const nights    = (r.fecha_entrada && r.fecha_salida)
     ? Math.max(0, (new Date(r.fecha_salida) - new Date(r.fecha_entrada)) / 86400000)
     : 0;
-  const precio = PLAN_PRECIOS[r.modalidad] || 0;
-  const total  = nights && precio ? '$' + (nights * precio).toLocaleString('es-CO') : '—';
-  const plan   = PLAN_NOMBRES[r.modalidad] || r.modalidad || '—';
+  const precio    = PLAN_PRECIOS[r.modalidad] || 0;
+  const chefCost  = r.cocinero && nights && r.huespedes ? nights * r.huespedes * 100000 : 0;
+  const totalNum  = nights * precio + chefCost;
+  const total     = totalNum ? '$' + totalNum.toLocaleString('es-CO') + ' COP' : '—';
+  const plan      = PLAN_NOMBRES[r.modalidad] || r.modalidad || '—';
 
-  return `Hola ${r.nombre}! 🌴 Te escribimos de *Cabaña La Gabriela*.
+  return `Hola ${r.nombre}, te escribimos de Cabana La Gabriela.
 
-✅ *Tu reserva ha sido CONFIRMADA*
+Tu reserva ha sido CONFIRMADA.
 
-📋 *Detalles:*
-• Plan: ${plan}
-• Llegada: ${r.fecha_entrada || '—'}
-• Salida: ${r.fecha_salida || '—'}
-• Noches: ${nights || '—'}
-• Huéspedes: ${r.huespedes || '—'}
-• Total: ${total}
+DETALLES:
+- Plan: ${plan}
+- Llegada: ${r.fecha_entrada || '—'}
+- Salida: ${r.fecha_salida || '—'}
+- Noches: ${nights || '—'}
+- Huespedes: ${r.huespedes || '—'}
+- Cocinero: ${r.cocinero ? 'Si' : 'No'}
+- Total: ${total}
 
-📍 *Ubicación:* Playa Venado, entre Moñitos y San Bernardo del Viento, Córdoba.
-🗺️ GPS: 9.35933, -76.00764
+Ubicacion: Playa Venado, entre Monitos y San Bernardo del Viento, Cordoba.
+GPS: 9.35933, -76.00764
 
-Cualquier duda estamos aquí. ¡Te esperamos! 🌊`;
+Cualquier duda, estamos aqui. Te esperamos!`;
 }
 
 async function confirmarYNotificar(id) {
@@ -636,11 +639,13 @@ async function confirmarYNotificar(id) {
 
   const r = tablaRows.find(x => x.id === id);
   if (r && r.email) {
-    const nights = (r.fecha_entrada && r.fecha_salida)
+    const nights   = (r.fecha_entrada && r.fecha_salida)
       ? Math.max(0, (new Date(r.fecha_salida) - new Date(r.fecha_entrada)) / 86400000)
       : 0;
-    const precio = PLAN_PRECIOS[r.modalidad] || 0;
-    const total  = nights && precio ? '$' + (nights * precio).toLocaleString('es-CO') + ' COP' : '—';
+    const precio   = PLAN_PRECIOS[r.modalidad] || 0;
+    const chefCost = r.cocinero && nights && r.huespedes ? nights * r.huespedes * 100000 : 0;
+    const totalNum = nights * precio + chefCost;
+    const total    = totalNum ? '$' + totalNum.toLocaleString('es-CO') + ' COP' : '—';
     const plan   = PLAN_NOMBRES[r.modalidad] || r.modalidad || '—';
 
     emailjs.send('service_w5t4e4k', 'template_b4b9rpe', {
