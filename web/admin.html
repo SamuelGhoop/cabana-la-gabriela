@@ -489,8 +489,8 @@ async function loadReservas() {
       rows = rows.filter(r =>
         (r.nombre   || '').toLowerCase().includes(q) ||
         (r.telefono || '').toLowerCase().includes(q) ||
-        (r.email    || '').toLowerCase().includes(q) ||
-        (r.notas    || '').toLowerCase().includes(q)
+        (r.email || r.correo || '').toLowerCase().includes(q) ||
+        (r.notas || r.mensaje || '').toLowerCase().includes(q)
       );
     }
 
@@ -514,8 +514,8 @@ function loadLocalReservas() {
   if (q) rows = rows.filter(r =>
     (r.nombre   || '').toLowerCase().includes(q) ||
     (r.telefono || '').toLowerCase().includes(q) ||
-    (r.correo   || '').toLowerCase().includes(q) ||
-    (r.mensaje  || '').toLowerCase().includes(q)
+    (r.email || r.correo || '').toLowerCase().includes(q) ||
+    (r.notas || r.mensaje || '').toLowerCase().includes(q)
   );
   if (estado) rows = rows.filter(r => r.estado === estado);
 
@@ -607,7 +607,8 @@ function buildMensajeConfirmacion(r) {
     ? Math.max(0, (new Date(r.fecha_salida) - new Date(r.fecha_entrada)) / 86400000)
     : 0;
   const precio    = PLAN_PRECIOS[r.modalidad] || 0;
-  const chefCost  = r.cocinero && nights && r.huespedes ? nights * r.huespedes * 100000 : 0;
+  const cocineroOk = r.cocinero === true || r.cocinero === 'si';
+  const chefCost  = cocineroOk && nights && r.huespedes ? nights * r.huespedes * 100000 : 0;
   const totalNum  = nights * precio + chefCost;
   const total     = totalNum ? '$' + totalNum.toLocaleString('es-CO') + ' COP' : '—';
   const plan      = PLAN_NOMBRES[r.modalidad] || r.modalidad || '—';
@@ -731,8 +732,9 @@ async function exportarCSV() {
       : '';
     const planPrices = { piso1: 1000000, piso2: 1500000, completa: 2000000 };
     const price  = planPrices[r.modalidad] || 0;
-    const chef   = (r.mensaje || '').includes('cocinero') || r.cocinero === 'si';
-    const total  = nights && price ? nights * price : '';
+    const chef     = r.cocinero === true || r.cocinero === 'si';
+    const chefCost = chef && nights && r.huespedes ? nights * r.huespedes * 100000 : 0;
+    const total    = nights && price ? nights * price + chefCost : '';
 
     return [
       r.id,

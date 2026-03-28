@@ -456,7 +456,7 @@ async function saveReservation(data) {
 
   function guardarLocal() {
     const stored = JSON.parse(localStorage.getItem('cabana_reservas') || '[]');
-    const entry  = { id: Date.now(), ...reserva, correo: data.correo, fecha_creacion: new Date().toLocaleString('es-CO') };
+    const entry  = { id: Date.now(), ...reserva, fecha_creacion: new Date().toLocaleString('es-CO') };
     stored.unshift(entry);
     localStorage.setItem('cabana_reservas', JSON.stringify(stored));
     return entry;
