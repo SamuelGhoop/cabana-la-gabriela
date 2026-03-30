@@ -7,7 +7,6 @@
 // ============================================================
 
 const CHATBOT_CONFIG = {
-  apiKey: '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',
   model: 'llama-3.3-70b-versatile',
   maxHistory: 20
 };
@@ -522,20 +521,14 @@ async function sendChatMessage() {
   cbSetTyping(true);
 
   try {
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const res = await fetch('/.netlify/functions/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + CHATBOT_CONFIG.apiKey
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: CHATBOT_CONFIG.model,
         messages: [
           { role: 'system', content: CHATBOT_SYSTEM_PROMPT },
           ...historyToSend
-        ],
-        temperature: 0.7,
-        max_tokens: 1024
+        ]
       })
     });
 
